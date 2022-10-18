@@ -1,0 +1,81 @@
+swagger: "2.0"
+info:
+  description: "Music API"
+  version: "1.0.0"
+  title: "Music API"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+  contact:
+    email: "ridwan.rais2@gmail.com"
+host: "virtserver.swaggerhub.com"
+
+schemes:
+  - "https"
+
+tags:
+- name: "Music API"
+  description: "Every request and response about Music API"
+
+paths:
+  /health:
+    get:
+      summary: "Health check"
+      description: "Health check endpoint"
+      tags:
+        - "Health"
+      produces:
+        - "application/json"
+
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            type: object
+            properties:
+              message:
+                type: "string"
+                description: "success retrieve data"
+                example: "app running well"
+              data:
+                type: object
+                $ref: "#/definitions/Health"
+
+        "400":
+          $ref: "#/responses/BadRequest"
+        "401":
+          $ref: "#/responses/BadRequest"
+        "404":
+          $ref: "#/responses/NotFound"
+
+definitions:
+  Health:
+    type: "object"
+    properties:
+      status:
+        type: string
+        example: "UP"
+
+  Error:
+    type: object
+    properties:
+      code:
+        type: string
+      message:
+        type: string
+        example: "error"
+
+responses:
+  NotFound:
+    description: The specified resource was not found
+    schema:
+      $ref: "#/definitions/Error"
+  Unauthorized:
+    description: Unauthorized
+    schema:
+      $ref: "#/definitions/Error"
+
+  BadRequest:
+    description: Unauthorized
+    schema:
+      $ref: "#/definitions/Error"
