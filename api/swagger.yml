@@ -1,21 +1,22 @@
 swagger: "2.0"
 info:
-  description: "Music API"
+  description: "Youtube API"
   version: "1.0.0"
-  title: "Music API"
+  title: "Youtube API"
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
   contact:
     email: "ridwan.rais2@gmail.com"
-host: "virtserver.swaggerhub.com"
+# host: "virtserver.swaggerhub.com"
 
 schemes:
-  - "https"
+  - http
+  # - https
 
 tags:
-- name: "Music API"
-  description: "Every request and response about Music API"
+- name: "Youtube API"
+  description: "Every request and response about Youtube API"
 
 paths:
   /health:
@@ -74,7 +75,6 @@ responses:
     description: Unauthorized
     schema:
       $ref: "#/definitions/Error"
-
   BadRequest:
     description: Unauthorized
     schema:

@@ -19,12 +19,12 @@ var (
 func init() {
 	SwaggerJSON = json.RawMessage([]byte(`{
   "schemes": [
-    "https"
+    "http"
   ],
   "swagger": "2.0",
   "info": {
-    "description": "Music API",
-    "title": "Music API",
+    "description": "Youtube API",
+    "title": "Youtube API",
     "contact": {
       "email": "ridwan.rais2@gmail.com"
     },
@@ -34,7 +34,6 @@ func init() {
     },
     "version": "1.0.0"
   },
-  "host": "virtserver.swaggerhub.com",
   "paths": {
     "/health": {
       "get": {
@@ -122,19 +121,19 @@ func init() {
   },
   "tags": [
     {
-      "description": "Every request and response about Music API",
-      "name": "Music API"
+      "description": "Every request and response about Youtube API",
+      "name": "Youtube API"
     }
   ]
 }`))
 	FlatSwaggerJSON = json.RawMessage([]byte(`{
   "schemes": [
-    "https"
+    "http"
   ],
   "swagger": "2.0",
   "info": {
-    "description": "Music API",
-    "title": "Music API",
+    "description": "Youtube API",
+    "title": "Youtube API",
     "contact": {
       "email": "ridwan.rais2@gmail.com"
     },
@@ -144,7 +143,6 @@ func init() {
     },
     "version": "1.0.0"
   },
-  "host": "virtserver.swaggerhub.com",
   "paths": {
     "/health": {
       "get": {
@@ -241,8 +239,8 @@ func init() {
   },
   "tags": [
     {
-      "description": "Every request and response about Music API",
-      "name": "Music API"
+      "description": "Every request and response about Youtube API",
+      "name": "Youtube API"
     }
   ]
 }`))

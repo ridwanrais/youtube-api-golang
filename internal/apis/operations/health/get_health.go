@@ -14,7 +14,7 @@ import (
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 
-	"github.com/music-api-golang/internal/models"
+	"github.com/youtube-api-golang/internal/models"
 )
 
 // GetHealthHandlerFunc turns a function with the right signature into a get health handler
