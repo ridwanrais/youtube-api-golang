@@ -9,14 +9,21 @@ info:
   contact:
     email: "ridwan.rais2@gmail.com"
 # host: "virtserver.swaggerhub.com"
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    in: header
+    name: Authorization
+
+security:
+  - Bearer: []
 
 schemes:
   - http
-  # - https
 
 tags:
-- name: "Youtube API"
-  description: "Every request and response about Youtube API"
+  - name: "Youtube API"
+    description: "Every request and response about Youtube API"
 
 paths:
   /health:
@@ -27,7 +34,6 @@ paths:
         - "Health"
       produces:
         - "application/json"
-
       responses:
         "200":
           description: "Success"
@@ -41,7 +47,477 @@ paths:
               data:
                 type: object
                 $ref: "#/definitions/Health"
+        "400":
+          $ref: "#/responses/BadRequest"
+        "401":
+          $ref: "#/responses/BadRequest"
+        "404":
+          $ref: "#/responses/NotFound"
 
+  /user/register:
+    post:
+      summary: "Create user"
+      description: "Create user/channel endpoint"
+      tags:
+        - "User"
+      produces:
+        - "application/json"
+      parameters:
+        - in: body
+          name: "body"
+          description: "register user/channel"
+          schema:
+            $ref: "#/definitions/UserRegister"
+      security: []
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            type: object
+            properties:
+              message:
+                type: "string"
+                description: "user created successfully"
+                example: "user created successfully"
+              userID:
+                type: string
+                example: "1"
+        "400":
+          $ref: "#/responses/BadRequest"
+        "401":
+          $ref: "#/responses/BadRequest"
+        "404":
+          $ref: "#/responses/NotFound"
+  /user/login:
+    post:
+      summary: Login
+      description: Login
+      tags:
+        - Auth
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/LoginRequest"
+      security: []
+      responses:
+        "200":
+          description: "Success"
+          headers:
+            Set-Cookie:
+              type: string
+              # example: JSESSIONID=abcde12345; Path=/; HttpOnly
+          schema:
+            type: object
+            $ref: "#/definitions/LoginResponse"
+        "400":
+          $ref: "#/responses/BadRequest"
+        "401":
+          $ref: "#/responses/BadRequest"
+        "404":
+          $ref: "#/responses/NotFound"
+  # /user/google:
+  #   post:
+  #     summary: Login ussing google account
+  #     description: "Login ussing google account"
+  #     tags:
+  #       - OAuth
+  /user/{id}:
+    put:
+      summary: update user
+      description: update user
+      tags:
+        - User
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          required: true
+          name: "id"
+          type: "string"
+          description: "The id of user"
+        - in: body
+          name: "body"
+          description: "register user/channel"
+          schema:
+            $ref: "#/definitions/UserUpdate"
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            type: object
+            properties:
+              message:
+                type: "string"
+                description: "user edited successfully"
+                example: "user edited successfully"
+              updatedUser:
+                type: object
+                $ref: "#/definitions/UserUpdate"
+        "400":
+          $ref: "#/responses/BadRequest"
+        "401":
+          $ref: "#/responses/BadRequest"
+        "404":
+          $ref: "#/responses/NotFound"
+    delete:
+      summary: delete user
+      description: delete user
+      tags:
+        - User
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          required: true
+          name: "id"
+          type: "string"
+          description: "The id of user"
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            type: object
+            properties:
+              message:
+                type: "string"
+                description: "user deleted successfully"
+                example: "user deleted successfully"
+              userID:
+                type: string
+                example: "1"
+        "400":
+          $ref: "#/responses/BadRequest"
+        "401":
+          $ref: "#/responses/BadRequest"
+        "404":
+          $ref: "#/responses/NotFound"
+    get:
+      summary: get user
+      description: get user
+      tags:
+        - User
+      produces:
+        - "application/json"
+      security: []
+      parameters:
+        - in: "path"
+          required: true
+          name: "id"
+          type: "string"
+          description: "The id of user"
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            type: object
+            properties:
+              message:
+                type: "string"
+                description: "user gotten successfully"
+                example: "user gotten successfully"
+              user:
+                type: object
+                $ref: "#/definitions/UserRegister"
+        "400":
+          $ref: "#/responses/BadRequest"
+        "401":
+          $ref: "#/responses/BadRequest"
+        "404":
+          $ref: "#/responses/NotFound"
+
+  /sub/{user_id}:
+    patch:
+      summary: subcribe a user
+      description: subcribe a user
+      tags:
+        - Subscription
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          required: true
+          name: "user_id"
+          type: "string"
+          description: "The id of user"
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            type: object
+            properties:
+              message:
+                type: "string"
+                description: "subscribing a user is successful"
+                example: "subscribing a user is successful"
+        "400":
+          $ref: "#/responses/BadRequest"
+        "401":
+          $ref: "#/responses/BadRequest"
+        "404":
+          $ref: "#/responses/NotFound"
+  /unsub/{user_id}:
+    patch:
+      summary: unsubcribe a user
+      description: unsubcribe a user
+      tags:
+        - Subscription
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          required: true
+          name: "user_id"
+          type: "string"
+          description: "The id of user"
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            type: object
+            properties:
+              message:
+                type: "string"
+                description: "unsubscribing a user is successful"
+                example: "unsubscribing a user is successful"
+        "400":
+          $ref: "#/responses/BadRequest"
+        "401":
+          $ref: "#/responses/BadRequest"
+        "404":
+          $ref: "#/responses/NotFound"
+
+  /like/{video_id}:
+    patch:
+      summary: like a video
+      description: like a video
+      tags:
+        - Like
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          required: true
+          name: "video_id"
+          type: "string"
+          description: "The id of video"
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            type: object
+            properties:
+              message:
+                type: "string"
+                description: "liking a video is successful"
+                example: "liking a video is successful"
+              likeCount:
+                type: integer
+                example: 100
+        "400":
+          $ref: "#/responses/BadRequest"
+        "401":
+          $ref: "#/responses/BadRequest"
+        "404":
+          $ref: "#/responses/NotFound"
+  /dislike/{video_id}:
+    patch:
+      summary: dislike a video
+      description: dislike a video
+      tags:
+        - Like
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          required: true
+          name: "video_id"
+          type: "string"
+          description: "The id of video"
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            type: object
+            properties:
+              message:
+                type: "string"
+                description: "disliking a video is successful"
+                example: "disliking a video is successful"
+              likeCount:
+                type: integer
+                example: 100
+        "400":
+          $ref: "#/responses/BadRequest"
+        "401":
+          $ref: "#/responses/BadRequest"
+        "404":
+          $ref: "#/responses/NotFound"
+
+  /video:
+    post:
+      summary: "Post video"
+      description: "Post video endpoint"
+      tags:
+        - Video
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: post video
+          schema:
+            $ref: "#/definitions/Video"
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            type: object
+            properties:
+              message:
+                type: "string"
+                description: "video created successfully"
+                example: "video created successfully"
+              videoID:
+                type: string
+                example: "1"
+        "400":
+          $ref: "#/responses/BadRequest"
+        "401":
+          $ref: "#/responses/BadRequest"
+        "404":
+          $ref: "#/responses/NotFound"
+  /video/{id}:
+    get:
+      summary: "Get Video"
+      description: "Get video endpoint"
+      tags:
+        - Video
+      produces:
+        - application/json
+      parameters:
+        - in: "path"
+          required: true
+          name: "id"
+          type: "string"
+          description: "The id of video"
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            type: object
+            properties:
+              message:
+                type: "string"
+                description: "video gotten successfully"
+                example: "video gotten successfully"
+              video:
+                type: object
+                $ref: "#/definitions/Video"
+        "400":
+          $ref: "#/responses/BadRequest"
+        "401":
+          $ref: "#/responses/BadRequest"
+        "404":
+          $ref: "#/responses/NotFound"
+    put:
+      summary: "Update video"
+      description: "Update video endpoint"
+      tags:
+        - Video
+      produces:
+        - application/json
+      parameters:
+        - in: "path"
+          required: true
+          name: "id"
+          type: "string"
+          description: "The id of video"
+        - in: body
+          name: body
+          description: update video
+          schema:
+            $ref: "#/definitions/Video"
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            type: object
+            properties:
+              message:
+                type: "string"
+                description: "video updated successfully"
+                example: "video updated successfully"
+              video:
+                type: object
+                $ref: "#/definitions/Video"
+        "400":
+          $ref: "#/responses/BadRequest"
+        "401":
+          $ref: "#/responses/BadRequest"
+        "404":
+          $ref: "#/responses/NotFound"
+    delete:
+      summary: "Delete Video"
+      description: "Delete video endpoint"
+      tags:
+        - Video
+      produces:
+        - application/json
+      parameters:
+        - in: "path"
+          required: true
+          name: "id"
+          type: "string"
+          description: "The id of video"
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            type: object
+            properties:
+              message:
+                type: "string"
+                description: "video deleted successfully"
+                example: "video deleted successfully"
+              videoID:
+                type: string
+                example: "1"
+        "400":
+          $ref: "#/responses/BadRequest"
+        "401":
+          $ref: "#/responses/BadRequest"
+        "404":
+          $ref: "#/responses/NotFound"
+
+  /comment:
+    post:
+      summary: "Post comment"
+      description: "Post comment endpoint"
+      tags:
+        - Comment
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: post comment
+          schema:
+            $ref: "#/definitions/Comment"
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            type: object
+            properties:
+              message:
+                type: "string"
+                description: "comment created successfully"
+                example: "comment created successfully"
+              commentID:
+                type: string
+                example: "1"
         "400":
           $ref: "#/responses/BadRequest"
         "401":
@@ -56,6 +532,137 @@ definitions:
       status:
         type: string
         example: "UP"
+
+  UserRegister:
+    type: object
+    required:
+      - username
+      - email
+      - password
+    properties:
+      username:
+        type: string
+        example: "0889504178114"
+      email:
+        type: string
+        example: "ridwan.rais2@gmail.com"
+      password:
+        type: string
+        example: "123456"
+      img:
+        type: string
+      subscribers:
+        type: number
+      subscribedUsers:
+        type: array
+        items:
+          type: string
+      # timestamps:
+  UserUpdate:
+    type: object
+    properties:
+      username:
+        type: string
+        example: "0889504178114"
+      email:
+        type: string
+        example: "ridwan.rais2@gmail.com"
+      password:
+        type: string
+        example: "123456"
+      img:
+        type: string
+      subscribers:
+        type: number
+      subscribedUsers:
+        type: array
+        items:
+          type: string
+      # timestamps:
+
+  LoginRequest:
+    type: object
+    required:
+      - username
+      - password
+    properties:
+      username:
+        type: string
+      password:
+        type: string
+  LoginResponse:
+    type: object
+    properties:
+      name:
+        type: string
+      type:
+        type: string
+      value:
+        type: string
+      expired_at:
+        type: string
+      account_type:
+        type: string
+
+  Video:
+    type: object
+    required:
+      - userID
+      - title
+      - description
+      - imgUrl
+      - videoUrl
+      - views
+      - tags
+      - likes
+      - dislikes
+    properties:
+      userID:
+        type: string
+        example: "1"
+      title:
+        type: string
+        example: "My Video"
+      description:
+        type: string
+        example: "My first video."
+      imgUrl:
+        type: string
+      videoUrl:
+        type: string
+      views:
+        type: number
+      tags:
+        type: array
+        items:
+          type: string
+      likes:
+        type: array
+        items:
+          type: string
+      dislikes:
+        type: array
+        items:
+          type: string
+      # timestamps:
+
+  Comment:
+    type: object
+    required:
+      - userID
+      - videoID
+      - description
+    properties:
+      userID:
+        type: string
+        example: "1"
+      videoID:
+        type: string
+        example: "My Comment"
+      description:
+        type: string
+        example: "My first comment."
+      # timestamps:
 
   Error:
     type: object

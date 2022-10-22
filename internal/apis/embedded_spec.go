@@ -35,6 +35,105 @@ func init() {
     "version": "1.0.0"
   },
   "paths": {
+    "/comment": {
+      "post": {
+        "description": "Post comment endpoint",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Comment"
+        ],
+        "summary": "Post comment",
+        "parameters": [
+          {
+            "description": "post comment",
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Comment"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "commentID": {
+                  "type": "string",
+                  "example": "1"
+                },
+                "message": {
+                  "description": "comment created successfully",
+                  "type": "string",
+                  "example": "comment created successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/dislike/{video_id}": {
+      "patch": {
+        "description": "dislike a video",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Like"
+        ],
+        "summary": "dislike a video",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The id of video",
+            "name": "video_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "likeCount": {
+                  "type": "integer",
+                  "example": 100
+                },
+                "message": {
+                  "description": "disliking a video is successful",
+                  "type": "string",
+                  "example": "disliking a video is successful"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/responses/NotFound"
+          }
+        }
+      }
+    },
     "/health": {
       "get": {
         "description": "Health check endpoint",
@@ -74,9 +173,617 @@ func init() {
           }
         }
       }
+    },
+    "/like/{video_id}": {
+      "patch": {
+        "description": "like a video",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Like"
+        ],
+        "summary": "like a video",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The id of video",
+            "name": "video_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "likeCount": {
+                  "type": "integer",
+                  "example": 100
+                },
+                "message": {
+                  "description": "liking a video is successful",
+                  "type": "string",
+                  "example": "liking a video is successful"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/sub/{user_id}": {
+      "patch": {
+        "description": "subcribe a user",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Subscription"
+        ],
+        "summary": "subcribe a user",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The id of user",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "description": "subscribing a user is successful",
+                  "type": "string",
+                  "example": "subscribing a user is successful"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/unsub/{user_id}": {
+      "patch": {
+        "description": "unsubcribe a user",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Subscription"
+        ],
+        "summary": "unsubcribe a user",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The id of user",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "description": "unsubscribing a user is successful",
+                  "type": "string",
+                  "example": "unsubscribing a user is successful"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/user/login": {
+      "post": {
+        "security": [],
+        "description": "Login",
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Login",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LoginRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/LoginResponse"
+            },
+            "headers": {
+              "Set-Cookie": {
+                "type": "string"
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/user/register": {
+      "post": {
+        "security": [],
+        "description": "Create user/channel endpoint",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User"
+        ],
+        "summary": "Create user",
+        "parameters": [
+          {
+            "description": "register user/channel",
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/UserRegister"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "description": "user created successfully",
+                  "type": "string",
+                  "example": "user created successfully"
+                },
+                "userID": {
+                  "type": "string",
+                  "example": "1"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/user/{id}": {
+      "get": {
+        "security": [],
+        "description": "get user",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User"
+        ],
+        "summary": "get user",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The id of user",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "description": "user gotten successfully",
+                  "type": "string",
+                  "example": "user gotten successfully"
+                },
+                "user": {
+                  "type": "object",
+                  "$ref": "#/definitions/UserRegister"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/responses/NotFound"
+          }
+        }
+      },
+      "put": {
+        "description": "update user",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User"
+        ],
+        "summary": "update user",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The id of user",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "register user/channel",
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/UserUpdate"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "description": "user edited successfully",
+                  "type": "string",
+                  "example": "user edited successfully"
+                },
+                "updatedUser": {
+                  "type": "object",
+                  "$ref": "#/definitions/UserUpdate"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "description": "delete user",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User"
+        ],
+        "summary": "delete user",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The id of user",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "description": "user deleted successfully",
+                  "type": "string",
+                  "example": "user deleted successfully"
+                },
+                "userID": {
+                  "type": "string",
+                  "example": "1"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/video": {
+      "post": {
+        "description": "Post video endpoint",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Video"
+        ],
+        "summary": "Post video",
+        "parameters": [
+          {
+            "description": "post video",
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Video"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "description": "video created successfully",
+                  "type": "string",
+                  "example": "video created successfully"
+                },
+                "videoID": {
+                  "type": "string",
+                  "example": "1"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/video/{id}": {
+      "get": {
+        "description": "Get video endpoint",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Video"
+        ],
+        "summary": "Get Video",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The id of video",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "description": "video gotten successfully",
+                  "type": "string",
+                  "example": "video gotten successfully"
+                },
+                "video": {
+                  "type": "object",
+                  "$ref": "#/definitions/Video"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/responses/NotFound"
+          }
+        }
+      },
+      "put": {
+        "description": "Update video endpoint",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Video"
+        ],
+        "summary": "Update video",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The id of video",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "update video",
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Video"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "description": "video updated successfully",
+                  "type": "string",
+                  "example": "video updated successfully"
+                },
+                "video": {
+                  "type": "object",
+                  "$ref": "#/definitions/Video"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "description": "Delete video endpoint",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Video"
+        ],
+        "summary": "Delete Video",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The id of video",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "description": "video deleted successfully",
+                  "type": "string",
+                  "example": "video deleted successfully"
+                },
+                "videoID": {
+                  "type": "string",
+                  "example": "1"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/responses/NotFound"
+          }
+        }
+      }
     }
   },
   "definitions": {
+    "Comment": {
+      "type": "object",
+      "required": [
+        "userID",
+        "videoID",
+        "description"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "example": "My first comment."
+        },
+        "userID": {
+          "type": "string",
+          "example": "1"
+        },
+        "videoID": {
+          "type": "string",
+          "example": "My Comment"
+        }
+      }
+    },
     "Error": {
       "type": "object",
       "properties": {
@@ -95,6 +802,159 @@ func init() {
         "status": {
           "type": "string",
           "example": "UP"
+        }
+      }
+    },
+    "LoginRequest": {
+      "type": "object",
+      "required": [
+        "username",
+        "password"
+      ],
+      "properties": {
+        "password": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        }
+      }
+    },
+    "LoginResponse": {
+      "type": "object",
+      "properties": {
+        "account_type": {
+          "type": "string"
+        },
+        "expired_at": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "UserRegister": {
+      "type": "object",
+      "required": [
+        "username",
+        "email",
+        "password"
+      ],
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "ridwan.rais2@gmail.com"
+        },
+        "img": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string",
+          "example": "123456"
+        },
+        "subscribedUsers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "subscribers": {
+          "type": "number"
+        },
+        "username": {
+          "type": "string",
+          "example": "0889504178114"
+        }
+      }
+    },
+    "UserUpdate": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "ridwan.rais2@gmail.com"
+        },
+        "img": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string",
+          "example": "123456"
+        },
+        "subscribedUsers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "subscribers": {
+          "type": "number"
+        },
+        "username": {
+          "type": "string",
+          "example": "0889504178114"
+        }
+      }
+    },
+    "Video": {
+      "type": "object",
+      "required": [
+        "userID",
+        "title",
+        "description",
+        "imgUrl",
+        "videoUrl",
+        "views",
+        "tags",
+        "likes",
+        "dislikes"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "example": "My first video."
+        },
+        "dislikes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "imgUrl": {
+          "type": "string"
+        },
+        "likes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "title": {
+          "type": "string",
+          "example": "My Video"
+        },
+        "userID": {
+          "type": "string",
+          "example": "1"
+        },
+        "videoUrl": {
+          "type": "string"
+        },
+        "views": {
+          "type": "number"
         }
       }
     }
@@ -119,6 +979,18 @@ func init() {
       }
     }
   },
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "security": [
+    {
+      "Bearer": []
+    }
+  ],
   "tags": [
     {
       "description": "Every request and response about Youtube API",
@@ -144,6 +1016,123 @@ func init() {
     "version": "1.0.0"
   },
   "paths": {
+    "/comment": {
+      "post": {
+        "description": "Post comment endpoint",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Comment"
+        ],
+        "summary": "Post comment",
+        "parameters": [
+          {
+            "description": "post comment",
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Comment"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "commentID": {
+                  "type": "string",
+                  "example": "1"
+                },
+                "message": {
+                  "description": "comment created successfully",
+                  "type": "string",
+                  "example": "comment created successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "The specified resource was not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/dislike/{video_id}": {
+      "patch": {
+        "description": "dislike a video",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Like"
+        ],
+        "summary": "dislike a video",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The id of video",
+            "name": "video_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "likeCount": {
+                  "type": "integer",
+                  "example": 100
+                },
+                "message": {
+                  "description": "disliking a video is successful",
+                  "type": "string",
+                  "example": "disliking a video is successful"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "The specified resource was not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
     "/health": {
       "get": {
         "description": "Health check endpoint",
@@ -192,9 +1181,725 @@ func init() {
           }
         }
       }
+    },
+    "/like/{video_id}": {
+      "patch": {
+        "description": "like a video",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Like"
+        ],
+        "summary": "like a video",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The id of video",
+            "name": "video_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "likeCount": {
+                  "type": "integer",
+                  "example": 100
+                },
+                "message": {
+                  "description": "liking a video is successful",
+                  "type": "string",
+                  "example": "liking a video is successful"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "The specified resource was not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/sub/{user_id}": {
+      "patch": {
+        "description": "subcribe a user",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Subscription"
+        ],
+        "summary": "subcribe a user",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The id of user",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "description": "subscribing a user is successful",
+                  "type": "string",
+                  "example": "subscribing a user is successful"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "The specified resource was not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/unsub/{user_id}": {
+      "patch": {
+        "description": "unsubcribe a user",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Subscription"
+        ],
+        "summary": "unsubcribe a user",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The id of user",
+            "name": "user_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "description": "unsubscribing a user is successful",
+                  "type": "string",
+                  "example": "unsubscribing a user is successful"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "The specified resource was not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/user/login": {
+      "post": {
+        "security": [],
+        "description": "Login",
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Login",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LoginRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/LoginResponse"
+            },
+            "headers": {
+              "Set-Cookie": {
+                "type": "string"
+              }
+            }
+          },
+          "400": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "The specified resource was not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/user/register": {
+      "post": {
+        "security": [],
+        "description": "Create user/channel endpoint",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User"
+        ],
+        "summary": "Create user",
+        "parameters": [
+          {
+            "description": "register user/channel",
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/UserRegister"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "description": "user created successfully",
+                  "type": "string",
+                  "example": "user created successfully"
+                },
+                "userID": {
+                  "type": "string",
+                  "example": "1"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "The specified resource was not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/user/{id}": {
+      "get": {
+        "security": [],
+        "description": "get user",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User"
+        ],
+        "summary": "get user",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The id of user",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "description": "user gotten successfully",
+                  "type": "string",
+                  "example": "user gotten successfully"
+                },
+                "user": {
+                  "type": "object",
+                  "$ref": "#/definitions/UserRegister"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "The specified resource was not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "put": {
+        "description": "update user",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User"
+        ],
+        "summary": "update user",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The id of user",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "register user/channel",
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/UserUpdate"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "description": "user edited successfully",
+                  "type": "string",
+                  "example": "user edited successfully"
+                },
+                "updatedUser": {
+                  "type": "object",
+                  "$ref": "#/definitions/UserUpdate"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "The specified resource was not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "delete user",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "User"
+        ],
+        "summary": "delete user",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The id of user",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "description": "user deleted successfully",
+                  "type": "string",
+                  "example": "user deleted successfully"
+                },
+                "userID": {
+                  "type": "string",
+                  "example": "1"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "The specified resource was not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/video": {
+      "post": {
+        "description": "Post video endpoint",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Video"
+        ],
+        "summary": "Post video",
+        "parameters": [
+          {
+            "description": "post video",
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Video"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "description": "video created successfully",
+                  "type": "string",
+                  "example": "video created successfully"
+                },
+                "videoID": {
+                  "type": "string",
+                  "example": "1"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "The specified resource was not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/video/{id}": {
+      "get": {
+        "description": "Get video endpoint",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Video"
+        ],
+        "summary": "Get Video",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The id of video",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "description": "video gotten successfully",
+                  "type": "string",
+                  "example": "video gotten successfully"
+                },
+                "video": {
+                  "type": "object",
+                  "$ref": "#/definitions/Video"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "The specified resource was not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "put": {
+        "description": "Update video endpoint",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Video"
+        ],
+        "summary": "Update video",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The id of video",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "update video",
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Video"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "description": "video updated successfully",
+                  "type": "string",
+                  "example": "video updated successfully"
+                },
+                "video": {
+                  "type": "object",
+                  "$ref": "#/definitions/Video"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "The specified resource was not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Delete video endpoint",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Video"
+        ],
+        "summary": "Delete Video",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The id of video",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "description": "video deleted successfully",
+                  "type": "string",
+                  "example": "video deleted successfully"
+                },
+                "videoID": {
+                  "type": "string",
+                  "example": "1"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "The specified resource was not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
+    "Comment": {
+      "type": "object",
+      "required": [
+        "userID",
+        "videoID",
+        "description"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "example": "My first comment."
+        },
+        "userID": {
+          "type": "string",
+          "example": "1"
+        },
+        "videoID": {
+          "type": "string",
+          "example": "My Comment"
+        }
+      }
+    },
     "Error": {
       "type": "object",
       "properties": {
@@ -213,6 +1918,159 @@ func init() {
         "status": {
           "type": "string",
           "example": "UP"
+        }
+      }
+    },
+    "LoginRequest": {
+      "type": "object",
+      "required": [
+        "username",
+        "password"
+      ],
+      "properties": {
+        "password": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        }
+      }
+    },
+    "LoginResponse": {
+      "type": "object",
+      "properties": {
+        "account_type": {
+          "type": "string"
+        },
+        "expired_at": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "UserRegister": {
+      "type": "object",
+      "required": [
+        "username",
+        "email",
+        "password"
+      ],
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "ridwan.rais2@gmail.com"
+        },
+        "img": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string",
+          "example": "123456"
+        },
+        "subscribedUsers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "subscribers": {
+          "type": "number"
+        },
+        "username": {
+          "type": "string",
+          "example": "0889504178114"
+        }
+      }
+    },
+    "UserUpdate": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "ridwan.rais2@gmail.com"
+        },
+        "img": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string",
+          "example": "123456"
+        },
+        "subscribedUsers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "subscribers": {
+          "type": "number"
+        },
+        "username": {
+          "type": "string",
+          "example": "0889504178114"
+        }
+      }
+    },
+    "Video": {
+      "type": "object",
+      "required": [
+        "userID",
+        "title",
+        "description",
+        "imgUrl",
+        "videoUrl",
+        "views",
+        "tags",
+        "likes",
+        "dislikes"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "example": "My first video."
+        },
+        "dislikes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "imgUrl": {
+          "type": "string"
+        },
+        "likes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "title": {
+          "type": "string",
+          "example": "My Video"
+        },
+        "userID": {
+          "type": "string",
+          "example": "1"
+        },
+        "videoUrl": {
+          "type": "string"
+        },
+        "views": {
+          "type": "number"
         }
       }
     }
@@ -237,6 +2095,18 @@ func init() {
       }
     }
   },
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "security": [
+    {
+      "Bearer": []
+    }
+  ],
   "tags": [
     {
       "description": "Every request and response about Youtube API",

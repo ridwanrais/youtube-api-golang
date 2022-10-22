@@ -19,7 +19,13 @@ import (
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 
+	"github.com/youtube-api-golang/internal/apis/operations/auth"
+	"github.com/youtube-api-golang/internal/apis/operations/comment"
 	"github.com/youtube-api-golang/internal/apis/operations/health"
+	"github.com/youtube-api-golang/internal/apis/operations/like"
+	"github.com/youtube-api-golang/internal/apis/operations/subscription"
+	"github.com/youtube-api-golang/internal/apis/operations/user"
+	"github.com/youtube-api-golang/internal/apis/operations/video"
 )
 
 // NewYoutubeAPIAPI creates a new YoutubeAPI instance
@@ -44,9 +50,58 @@ func NewYoutubeAPIAPI(spec *loads.Document) *YoutubeAPIAPI {
 
 		JSONProducer: runtime.JSONProducer(),
 
-		HealthGetHealthHandler: health.GetHealthHandlerFunc(func(params health.GetHealthParams) middleware.Responder {
+		UserDeleteUserIDHandler: user.DeleteUserIDHandlerFunc(func(params user.DeleteUserIDParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation user.DeleteUserID has not yet been implemented")
+		}),
+		VideoDeleteVideoIDHandler: video.DeleteVideoIDHandlerFunc(func(params video.DeleteVideoIDParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation video.DeleteVideoID has not yet been implemented")
+		}),
+		HealthGetHealthHandler: health.GetHealthHandlerFunc(func(params health.GetHealthParams, principal interface{}) middleware.Responder {
 			return middleware.NotImplemented("operation health.GetHealth has not yet been implemented")
 		}),
+		UserGetUserIDHandler: user.GetUserIDHandlerFunc(func(params user.GetUserIDParams) middleware.Responder {
+			return middleware.NotImplemented("operation user.GetUserID has not yet been implemented")
+		}),
+		VideoGetVideoIDHandler: video.GetVideoIDHandlerFunc(func(params video.GetVideoIDParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation video.GetVideoID has not yet been implemented")
+		}),
+		LikePatchDislikeVideoIDHandler: like.PatchDislikeVideoIDHandlerFunc(func(params like.PatchDislikeVideoIDParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation like.PatchDislikeVideoID has not yet been implemented")
+		}),
+		LikePatchLikeVideoIDHandler: like.PatchLikeVideoIDHandlerFunc(func(params like.PatchLikeVideoIDParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation like.PatchLikeVideoID has not yet been implemented")
+		}),
+		SubscriptionPatchSubUserIDHandler: subscription.PatchSubUserIDHandlerFunc(func(params subscription.PatchSubUserIDParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation subscription.PatchSubUserID has not yet been implemented")
+		}),
+		SubscriptionPatchUnsubUserIDHandler: subscription.PatchUnsubUserIDHandlerFunc(func(params subscription.PatchUnsubUserIDParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation subscription.PatchUnsubUserID has not yet been implemented")
+		}),
+		CommentPostCommentHandler: comment.PostCommentHandlerFunc(func(params comment.PostCommentParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation comment.PostComment has not yet been implemented")
+		}),
+		AuthPostUserLoginHandler: auth.PostUserLoginHandlerFunc(func(params auth.PostUserLoginParams) middleware.Responder {
+			return middleware.NotImplemented("operation auth.PostUserLogin has not yet been implemented")
+		}),
+		UserPostUserRegisterHandler: user.PostUserRegisterHandlerFunc(func(params user.PostUserRegisterParams) middleware.Responder {
+			return middleware.NotImplemented("operation user.PostUserRegister has not yet been implemented")
+		}),
+		VideoPostVideoHandler: video.PostVideoHandlerFunc(func(params video.PostVideoParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation video.PostVideo has not yet been implemented")
+		}),
+		UserPutUserIDHandler: user.PutUserIDHandlerFunc(func(params user.PutUserIDParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation user.PutUserID has not yet been implemented")
+		}),
+		VideoPutVideoIDHandler: video.PutVideoIDHandlerFunc(func(params video.PutVideoIDParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation video.PutVideoID has not yet been implemented")
+		}),
+
+		// Applies when the "Authorization" header is set
+		BearerAuth: func(token string) (interface{}, error) {
+			return nil, errors.NotImplemented("api key auth (Bearer) Authorization from header param [Authorization] has not yet been implemented")
+		},
+		// default authorizer is authorized meaning no requests are blocked
+		APIAuthorizer: security.Authorized(),
 	}
 }
 
@@ -83,8 +138,43 @@ type YoutubeAPIAPI struct {
 	//   - application/json
 	JSONProducer runtime.Producer
 
+	// BearerAuth registers a function that takes a token and returns a principal
+	// it performs authentication based on an api key Authorization provided in the header
+	BearerAuth func(string) (interface{}, error)
+
+	// APIAuthorizer provides access control (ACL/RBAC/ABAC) by providing access to the request and authenticated principal
+	APIAuthorizer runtime.Authorizer
+
+	// UserDeleteUserIDHandler sets the operation handler for the delete user ID operation
+	UserDeleteUserIDHandler user.DeleteUserIDHandler
+	// VideoDeleteVideoIDHandler sets the operation handler for the delete video ID operation
+	VideoDeleteVideoIDHandler video.DeleteVideoIDHandler
 	// HealthGetHealthHandler sets the operation handler for the get health operation
 	HealthGetHealthHandler health.GetHealthHandler
+	// UserGetUserIDHandler sets the operation handler for the get user ID operation
+	UserGetUserIDHandler user.GetUserIDHandler
+	// VideoGetVideoIDHandler sets the operation handler for the get video ID operation
+	VideoGetVideoIDHandler video.GetVideoIDHandler
+	// LikePatchDislikeVideoIDHandler sets the operation handler for the patch dislike video ID operation
+	LikePatchDislikeVideoIDHandler like.PatchDislikeVideoIDHandler
+	// LikePatchLikeVideoIDHandler sets the operation handler for the patch like video ID operation
+	LikePatchLikeVideoIDHandler like.PatchLikeVideoIDHandler
+	// SubscriptionPatchSubUserIDHandler sets the operation handler for the patch sub user ID operation
+	SubscriptionPatchSubUserIDHandler subscription.PatchSubUserIDHandler
+	// SubscriptionPatchUnsubUserIDHandler sets the operation handler for the patch unsub user ID operation
+	SubscriptionPatchUnsubUserIDHandler subscription.PatchUnsubUserIDHandler
+	// CommentPostCommentHandler sets the operation handler for the post comment operation
+	CommentPostCommentHandler comment.PostCommentHandler
+	// AuthPostUserLoginHandler sets the operation handler for the post user login operation
+	AuthPostUserLoginHandler auth.PostUserLoginHandler
+	// UserPostUserRegisterHandler sets the operation handler for the post user register operation
+	UserPostUserRegisterHandler user.PostUserRegisterHandler
+	// VideoPostVideoHandler sets the operation handler for the post video operation
+	VideoPostVideoHandler video.PostVideoHandler
+	// UserPutUserIDHandler sets the operation handler for the put user ID operation
+	UserPutUserIDHandler user.PutUserIDHandler
+	// VideoPutVideoIDHandler sets the operation handler for the put video ID operation
+	VideoPutVideoIDHandler video.PutVideoIDHandler
 
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
@@ -162,8 +252,54 @@ func (o *YoutubeAPIAPI) Validate() error {
 		unregistered = append(unregistered, "JSONProducer")
 	}
 
+	if o.BearerAuth == nil {
+		unregistered = append(unregistered, "AuthorizationAuth")
+	}
+
+	if o.UserDeleteUserIDHandler == nil {
+		unregistered = append(unregistered, "user.DeleteUserIDHandler")
+	}
+	if o.VideoDeleteVideoIDHandler == nil {
+		unregistered = append(unregistered, "video.DeleteVideoIDHandler")
+	}
 	if o.HealthGetHealthHandler == nil {
 		unregistered = append(unregistered, "health.GetHealthHandler")
+	}
+	if o.UserGetUserIDHandler == nil {
+		unregistered = append(unregistered, "user.GetUserIDHandler")
+	}
+	if o.VideoGetVideoIDHandler == nil {
+		unregistered = append(unregistered, "video.GetVideoIDHandler")
+	}
+	if o.LikePatchDislikeVideoIDHandler == nil {
+		unregistered = append(unregistered, "like.PatchDislikeVideoIDHandler")
+	}
+	if o.LikePatchLikeVideoIDHandler == nil {
+		unregistered = append(unregistered, "like.PatchLikeVideoIDHandler")
+	}
+	if o.SubscriptionPatchSubUserIDHandler == nil {
+		unregistered = append(unregistered, "subscription.PatchSubUserIDHandler")
+	}
+	if o.SubscriptionPatchUnsubUserIDHandler == nil {
+		unregistered = append(unregistered, "subscription.PatchUnsubUserIDHandler")
+	}
+	if o.CommentPostCommentHandler == nil {
+		unregistered = append(unregistered, "comment.PostCommentHandler")
+	}
+	if o.AuthPostUserLoginHandler == nil {
+		unregistered = append(unregistered, "auth.PostUserLoginHandler")
+	}
+	if o.UserPostUserRegisterHandler == nil {
+		unregistered = append(unregistered, "user.PostUserRegisterHandler")
+	}
+	if o.VideoPostVideoHandler == nil {
+		unregistered = append(unregistered, "video.PostVideoHandler")
+	}
+	if o.UserPutUserIDHandler == nil {
+		unregistered = append(unregistered, "user.PutUserIDHandler")
+	}
+	if o.VideoPutVideoIDHandler == nil {
+		unregistered = append(unregistered, "video.PutVideoIDHandler")
 	}
 
 	if len(unregistered) > 0 {
@@ -180,12 +316,21 @@ func (o *YoutubeAPIAPI) ServeErrorFor(operationID string) func(http.ResponseWrit
 
 // AuthenticatorsFor gets the authenticators for the specified security schemes
 func (o *YoutubeAPIAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
-	return nil
+	result := make(map[string]runtime.Authenticator)
+	for name := range schemes {
+		switch name {
+		case "Bearer":
+			scheme := schemes[name]
+			result[name] = o.APIKeyAuthenticator(scheme.Name, scheme.In, o.BearerAuth)
+
+		}
+	}
+	return result
 }
 
 // Authorizer returns the registered authorizer
 func (o *YoutubeAPIAPI) Authorizer() runtime.Authorizer {
-	return nil
+	return o.APIAuthorizer
 }
 
 // ConsumersFor gets the consumers for the specified media types.
@@ -253,10 +398,66 @@ func (o *YoutubeAPIAPI) initHandlerCache() {
 		o.handlers = make(map[string]map[string]http.Handler)
 	}
 
+	if o.handlers["DELETE"] == nil {
+		o.handlers["DELETE"] = make(map[string]http.Handler)
+	}
+	o.handlers["DELETE"]["/user/{id}"] = user.NewDeleteUserID(o.context, o.UserDeleteUserIDHandler)
+	if o.handlers["DELETE"] == nil {
+		o.handlers["DELETE"] = make(map[string]http.Handler)
+	}
+	o.handlers["DELETE"]["/video/{id}"] = video.NewDeleteVideoID(o.context, o.VideoDeleteVideoIDHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/health"] = health.NewGetHealth(o.context, o.HealthGetHealthHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/user/{id}"] = user.NewGetUserID(o.context, o.UserGetUserIDHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/video/{id}"] = video.NewGetVideoID(o.context, o.VideoGetVideoIDHandler)
+	if o.handlers["PATCH"] == nil {
+		o.handlers["PATCH"] = make(map[string]http.Handler)
+	}
+	o.handlers["PATCH"]["/dislike/{video_id}"] = like.NewPatchDislikeVideoID(o.context, o.LikePatchDislikeVideoIDHandler)
+	if o.handlers["PATCH"] == nil {
+		o.handlers["PATCH"] = make(map[string]http.Handler)
+	}
+	o.handlers["PATCH"]["/like/{video_id}"] = like.NewPatchLikeVideoID(o.context, o.LikePatchLikeVideoIDHandler)
+	if o.handlers["PATCH"] == nil {
+		o.handlers["PATCH"] = make(map[string]http.Handler)
+	}
+	o.handlers["PATCH"]["/sub/{user_id}"] = subscription.NewPatchSubUserID(o.context, o.SubscriptionPatchSubUserIDHandler)
+	if o.handlers["PATCH"] == nil {
+		o.handlers["PATCH"] = make(map[string]http.Handler)
+	}
+	o.handlers["PATCH"]["/unsub/{user_id}"] = subscription.NewPatchUnsubUserID(o.context, o.SubscriptionPatchUnsubUserIDHandler)
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/comment"] = comment.NewPostComment(o.context, o.CommentPostCommentHandler)
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/user/login"] = auth.NewPostUserLogin(o.context, o.AuthPostUserLoginHandler)
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/user/register"] = user.NewPostUserRegister(o.context, o.UserPostUserRegisterHandler)
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/video"] = video.NewPostVideo(o.context, o.VideoPostVideoHandler)
+	if o.handlers["PUT"] == nil {
+		o.handlers["PUT"] = make(map[string]http.Handler)
+	}
+	o.handlers["PUT"]["/user/{id}"] = user.NewPutUserID(o.context, o.UserPutUserIDHandler)
+	if o.handlers["PUT"] == nil {
+		o.handlers["PUT"] = make(map[string]http.Handler)
+	}
+	o.handlers["PUT"]["/video/{id}"] = video.NewPutVideoID(o.context, o.VideoPutVideoIDHandler)
 }
 
 // Serve creates a http handler to serve the API over HTTP

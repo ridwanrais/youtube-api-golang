@@ -8,10 +8,10 @@ import (
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/runtime/middleware"
 
 	"github.com/youtube-api-golang/internal/apis/operations"
-	"github.com/youtube-api-golang/internal/apis/operations/health"
+	"github.com/youtube-api-golang/internal/handler"
+	"github.com/youtube-api-golang/internal/middleware"
 )
 
 //go:generate swagger generate server --target ../../../youtube-api-golang --name YoutubeAPI --spec ../../api/swagger.yml --model-package internal/models --server-package internal/apis --principal interface{}
@@ -23,6 +23,9 @@ func configureFlags(api *operations.YoutubeAPIAPI) {
 func configureAPI(api *operations.YoutubeAPIAPI) http.Handler {
 	// configure the api here
 	api.ServeError = errors.ServeError
+
+	//mounting handler
+	mountHandler := handler.NewHandler()
 
 	// Set your custom logger if needed. Default one is log.Printf
 	// Expected interface func(string, ...interface{})
@@ -38,11 +41,23 @@ func configureAPI(api *operations.YoutubeAPIAPI) http.Handler {
 
 	api.JSONProducer = runtime.JSONProducer()
 
-	if api.HealthGetHealthHandler == nil {
-		api.HealthGetHealthHandler = health.GetHealthHandlerFunc(func(params health.GetHealthParams) middleware.Responder {
-			return middleware.NotImplemented("operation health.GetHealth has not yet been implemented")
-		})
-	}
+	api.BearerAuth = middleware.ValidateHeader
+
+	// health check
+	api.HealthGetHealthHandler = mountHandler.GetHealthHandler()
+
+	// user
+	api.UserPostUserRegisterHandler = mountHandler.RegisterUserHandler()
+	api.UserPutUserIDHandler = mountHandler.UpdateUserHandler()
+	api.UserDeleteUserIDHandler = mountHandler.DeleteUserHandler()
+	api.UserGetUserIDHandler = mountHandler.GetUserByIDHandler()
+
+	// auth
+	api.AuthPostUserLoginHandler = mountHandler.LoginHandler()
+
+	// subscription
+	api.SubscriptionPatchSubUserIDHandler = mountHandler.SubscribeHandler()
+	api.SubscriptionPatchUnsubUserIDHandler = mountHandler.UnsubscribeHandler()
 
 	api.PreServerShutdown = func() {}
 

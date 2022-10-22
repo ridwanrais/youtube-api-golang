@@ -31,13 +31,13 @@ var oneRepo sync.Once
 
 func getRepository() repositories.Repositories {
 	oneRepo.Do(func() {
-		repo = repositories.NewRepositories(getMongoClient())
+		repo = repositories.NewRepositories(getMongoDB())
 	})
 
 	return repo
 }
 
-func getMongoClient() *mongo.Client {
+func getMongoDB() *mongo.Database {
 	if err := godotenv.Load(); err != nil {
 		log.Println("No .env file found")
 	}
@@ -58,5 +58,5 @@ func getMongoClient() *mongo.Client {
 	// 	}
 	// }()
 
-	return client
+	return client.Database("youtube-db")
 }
