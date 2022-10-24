@@ -59,6 +59,16 @@ func configureAPI(api *operations.YoutubeAPIAPI) http.Handler {
 	api.SubscriptionPatchSubUserIDHandler = mountHandler.SubscribeHandler()
 	api.SubscriptionPatchUnsubUserIDHandler = mountHandler.UnsubscribeHandler()
 
+	// video
+	api.VideoPostVideoHandler = mountHandler.AddVideoHandler()
+	api.VideoPutVideoIDHandler = mountHandler.UpdateVideoHandler()
+	api.VideoDeleteVideoIDHandler = mountHandler.DeleteVideoHandler()
+	api.VideoGetVideoIDHandler = mountHandler.GetVideoByIDHandler()
+	api.VideoPatchVideoViewIDHandler = mountHandler.UpdateViewHandler()
+	api.VideoGetVideoRandomHandler = mountHandler.GetRandomVideosHandler()
+	api.VideoGetVideoTrendHandler = mountHandler.GetTrendingVideosHandler()
+	api.VideoGetVideoSubHandler = mountHandler.GetVideosFromSubscribedChannelsHandler()
+
 	api.PreServerShutdown = func() {}
 
 	api.ServerShutdown = func() {}

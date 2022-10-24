@@ -7,14 +7,12 @@ import (
 	"time"
 
 	"github.com/youtube-api-golang/internal/apis/operations/user"
-	"github.com/youtube-api-golang/internal/models"
 	"github.com/youtube-api-golang/internal/shared"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"github.com/youtube-api-golang/internal/repositories/query"
 )
 
-func (u *useCase) RegisterUser(ctx context.Context, params *user.PostUserRegisterParams) (*user.PostUserRegisterOKBody, error) {
+func (u *useCase) RegisterUser(ctx context.Context, params user.PostUserRegisterParams) (*user.PostUserRegisterOKBody, error) {
 	_, err := mail.ParseAddress(*params.Body.Email)
 	if err != nil {
 		return nil, shared.CreateError(400, "email tidak valid")
@@ -55,13 +53,12 @@ func (u *useCase) RegisterUser(ctx context.Context, params *user.PostUserRegiste
 	}, nil
 }
 
-func (u *useCase) UpdateUser(ctx context.Context, params *user.PutUserIDParams, tokenUserID string) (*user.PutUserIDOKBody, error) {
+func (u *useCase) UpdateUser(ctx context.Context, params user.PutUserIDParams, tokenUserID string) (*user.PutUserIDOKBody, error) {
 	if params.ID != tokenUserID {
 		return nil, errors.New("Anda tidak berhak melakukan perintah ini")
 	}
 
 	var newUser query.User
-	newUser.ID, _ = primitive.ObjectIDFromHex(params.ID)
 
 	if params.Body.Username != "" {
 		res := u.repo.GetUserByUsername(ctx, params.Body.Username)
@@ -99,23 +96,9 @@ func (u *useCase) UpdateUser(ctx context.Context, params *user.PutUserIDParams, 
 	now := time.Now()
 	newUser.UpdatedAt = now
 
-	updatedUserMongo, err := u.repo.UpdateUser(ctx, newUser)
+	updatedUser, err := u.repo.UpdateUser(ctx, newUser, params.ID)
 	if err != nil {
-		return nil, shared.CreateError(500, "error saat update user")
-	}
-
-	var subscribedUsers []string
-	for _, v := range updatedUserMongo.SubscribedUsers {
-		subscribedUsers = append(subscribedUsers, v.Hex())
-	}
-
-	updatedUser := &models.UserUpdate{
-		Username:        updatedUserMongo.Username,
-		Email:           updatedUserMongo.Email,
-		Img:             updatedUserMongo.Email,
-		Password:        updatedUserMongo.Password,
-		Subscribers:     float64(updatedUserMongo.Subscribers),
-		SubscribedUsers: subscribedUsers,
+		return nil, err
 	}
 
 	return &user.PutUserIDOKBody{
@@ -124,7 +107,7 @@ func (u *useCase) UpdateUser(ctx context.Context, params *user.PutUserIDParams, 
 	}, nil
 }
 
-func (u *useCase) DeleteUser(ctx context.Context, params *user.DeleteUserIDParams, tokenUserID string) (*user.DeleteUserIDOKBody, error) {
+func (u *useCase) DeleteUser(ctx context.Context, params user.DeleteUserIDParams, tokenUserID string) (*user.DeleteUserIDOKBody, error) {
 	if params.ID != tokenUserID {
 		return nil, errors.New("Anda tidak berhak melakukan perintah ini")
 	}
@@ -141,26 +124,14 @@ func (u *useCase) DeleteUser(ctx context.Context, params *user.DeleteUserIDParam
 }
 
 func (u *useCase) GetUserByID(ctx context.Context, params user.GetUserIDParams) (*user.GetUserIDOKBody, error) {
-	getUser, err := u.repo.GetUserByID(ctx, params.ID)
+	userResponse, err := u.repo.GetUserByID(ctx, params.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	var subscribedUsers []string
-	for _, v := range getUser.SubscribedUsers {
-		subscribedUsers = append(subscribedUsers, v.Hex())
-	}
-
 	return &user.GetUserIDOKBody{
 		Message: "Success",
-		User: &models.UserRegister{
-			Username:        &getUser.Username,
-			Email:           &getUser.Email,
-			Password:        &getUser.Password,
-			Img:             getUser.Img,
-			Subscribers:     float64(getUser.Subscribers),
-			SubscribedUsers: subscribedUsers,
-		},
+		User:    userResponse,
 	}, nil
 
 }

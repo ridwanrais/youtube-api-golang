@@ -28,3 +28,5 @@ func InterfaceToTokenClaim(i interface{}) (*configs.AccessTokenClaim, error) {
 
 	return &claim, nil
 }
+
+// func MapVideoResponse()

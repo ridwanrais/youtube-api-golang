@@ -12,7 +12,7 @@ import (
 
 func (h *handler) RegisterUserHandler() user.PostUserRegisterHandlerFunc {
 	return func(params user.PostUserRegisterParams) middleware.Responder {
-		result, err := h.useCase.RegisterUser(context.Background(), &params)
+		result, err := h.useCase.RegisterUser(context.Background(), params)
 
 		if err != nil {
 			return user.NewPostUserRegisterBadRequest().WithPayload(&models.Error{Code: "500", Message: err.Error()})
@@ -32,7 +32,7 @@ func (h *handler) UpdateUserHandler() user.PutUserIDHandlerFunc {
 			log.Println(err)
 		}
 
-		res, err := h.useCase.UpdateUser(context.Background(), &params, tokenClaim.UserID)
+		res, err := h.useCase.UpdateUser(context.Background(), params, tokenClaim.UserID)
 
 		if err != nil {
 			return user.NewPutUserIDBadRequest().WithPayload(&models.Error{Code: "500", Message: err.Error()})
@@ -49,7 +49,7 @@ func (h *handler) DeleteUserHandler() user.DeleteUserIDHandlerFunc {
 			log.Println(err)
 		}
 
-		res, err := h.useCase.DeleteUser(context.Background(), &params, tokenClaim.UserID)
+		res, err := h.useCase.DeleteUser(context.Background(), params, tokenClaim.UserID)
 
 		if err != nil {
 			return user.NewPutUserIDBadRequest().WithPayload(&models.Error{Code: "500", Message: err.Error()})

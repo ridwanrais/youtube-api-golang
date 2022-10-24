@@ -154,7 +154,7 @@ paths:
                 example: "user edited successfully"
               updatedUser:
                 type: object
-                $ref: "#/definitions/UserUpdate"
+                $ref: "#/definitions/UserResponse"
         "400":
           $ref: "#/responses/BadRequest"
         "401":
@@ -219,7 +219,7 @@ paths:
                 example: "user gotten successfully"
               user:
                 type: object
-                $ref: "#/definitions/UserRegister"
+                $ref: "#/definitions/UserResponse"
         "400":
           $ref: "#/responses/BadRequest"
         "401":
@@ -368,7 +368,7 @@ paths:
           name: body
           description: post video
           schema:
-            $ref: "#/definitions/Video"
+            $ref: "#/definitions/VideoPost"
       responses:
         "200":
           description: "Success"
@@ -396,6 +396,7 @@ paths:
         - Video
       produces:
         - application/json
+      security: []
       parameters:
         - in: "path"
           required: true
@@ -438,7 +439,7 @@ paths:
           name: body
           description: update video
           schema:
-            $ref: "#/definitions/Video"
+            $ref: "#/definitions/VideoUpdate"
       responses:
         "200":
           description: "Success"
@@ -484,6 +485,120 @@ paths:
               videoID:
                 type: string
                 example: "1"
+        "400":
+          $ref: "#/responses/BadRequest"
+        "401":
+          $ref: "#/responses/BadRequest"
+        "404":
+          $ref: "#/responses/NotFound"
+  /video/view/{id}:
+    patch:
+      summary: "Add View"
+      description: "Add video view endpoint"
+      tags:
+        - Video
+      produces:
+        - application/json
+      parameters:
+        - in: "path"
+          required: true
+          name: "id"
+          type: "string"
+          description: "The id of video"
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            type: object
+            properties:
+              message:
+                type: "string"
+                description: "video gotten successfully"
+              totalViews:
+                type: integer
+        "400":
+          $ref: "#/responses/BadRequest"
+        "401":
+          $ref: "#/responses/BadRequest"
+        "404":
+          $ref: "#/responses/NotFound"
+  /video/trend:
+    get:
+      summary: "Get trending videos"
+      description: "Get trending videos endpoint"
+      tags:
+        - Video
+      produces:
+        - application/json
+      security: []
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            type: object
+            properties:
+              message:
+                type: "string"
+                description: "trending videos gotten successfully"
+              videos:
+                type: array
+                items:
+                  $ref: "#/definitions/Video"
+        "400":
+          $ref: "#/responses/BadRequest"
+        "401":
+          $ref: "#/responses/BadRequest"
+        "404":
+          $ref: "#/responses/NotFound"
+  /video/random:
+    get:
+      summary: "Get random videos"
+      description: "Get random videos endpoint"
+      tags:
+        - Video
+      produces:
+        - application/json
+      security: []
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            type: object
+            properties:
+              message:
+                type: "string"
+                description: "random videos gotten successfully"
+              videos:
+                type: array
+                items:
+                  $ref: "#/definitions/Video"
+        "400":
+          $ref: "#/responses/BadRequest"
+        "401":
+          $ref: "#/responses/BadRequest"
+        "404":
+          $ref: "#/responses/NotFound"
+  /video/sub:
+    get:
+      summary: "Get subscribed videos"
+      description: "Get subscribed videos endpoint"
+      tags:
+        - Video
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            type: object
+            properties:
+              message:
+                type: "string"
+                description: "random videos gotten successfully"
+              videos:
+                type: array
+                items:
+                  $ref: "#/definitions/Video"
         "400":
           $ref: "#/responses/BadRequest"
         "401":
@@ -579,6 +694,28 @@ definitions:
         items:
           type: string
       # timestamps:
+  UserResponse:
+    type: object
+    properties:
+      ID:
+        type: string
+      username:
+        type: string
+        example: "0889504178114"
+      email:
+        type: string
+        example: "ridwan.rais2@gmail.com"
+      password:
+        type: string
+        example: "123456"
+      img:
+        type: string
+      subscribers:
+        type: number
+      subscribedUsers:
+        type: array
+        items:
+          type: string
 
   LoginRequest:
     type: object
@@ -604,6 +741,50 @@ definitions:
       account_type:
         type: string
 
+  VideoPost:
+    type: object
+    required:
+      - title
+      - description
+      - imgUrl
+      - videoUrl
+    properties:
+      title:
+        type: string
+        example: "My Video"
+      description:
+        type: string
+        example: "My first video."
+      imgUrl:
+        type: string
+      videoUrl:
+        type: string
+      tags:
+        type: array
+        items:
+          type: string
+  VideoUpdate:
+    type: object
+    required:
+      - title
+      - description
+      - imgUrl
+      - videoUrl
+    properties:
+      title:
+        type: string
+        example: "My Video"
+      description:
+        type: string
+        example: "My first video."
+      imgUrl:
+        type: string
+      videoUrl:
+        type: string
+      tags:
+        type: array
+        items:
+          type: string
   Video:
     type: object
     required:
@@ -617,6 +798,8 @@ definitions:
       - likes
       - dislikes
     properties:
+      ID:
+        type: string
       userID:
         type: string
         example: "1"
@@ -631,7 +814,7 @@ definitions:
       videoUrl:
         type: string
       views:
-        type: number
+        type: integer
       tags:
         type: array
         items:
@@ -644,7 +827,12 @@ definitions:
         type: array
         items:
           type: string
-      # timestamps:
+      createdAt:
+        type: string
+        example: 2021-09-28T07:38:30.273469Z
+      updatedAt:
+        type: string
+        example: 2021-09-28T07:38:30.273469Z
 
   Comment:
     type: object

@@ -67,8 +67,6 @@ func (u *useCase) createAccessToken(ctx context.Context, params *query.User) (*m
 		return nil, err
 	}
 
-	// cookieName := "access_token"
-
 	now := time.Now()
 	end := now.Add(tokenConfig.AccessTokenLifeTime)
 

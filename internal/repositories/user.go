@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/youtube-api-golang/internal/models"
 	"github.com/youtube-api-golang/internal/repositories/query"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -44,7 +45,7 @@ func (r *repositories) GetUserByEmail(ctx context.Context, email string) *query.
 	return result
 }
 
-func (r *repositories) GetUserByID(ctx context.Context, userID string) (user *query.User, err error) {
+func (r *repositories) GetUserByID(ctx context.Context, userID string) (user *models.UserResponse, err error) {
 	coll := r.db.Collection("users")
 	id, _ := primitive.ObjectIDFromHex(userID)
 
@@ -59,7 +60,22 @@ func (r *repositories) GetUserByID(ctx context.Context, userID string) (user *qu
 		return nil, err
 	}
 
-	return result, nil
+	var subscribedUsers []string
+	for _, v := range result.SubscribedUsers {
+		subscribedUsers = append(subscribedUsers, v.Hex())
+	}
+
+	userResponse := &models.UserResponse{
+		ID:              result.ID.Hex(),
+		Username:        result.Username,
+		Email:           result.Email,
+		Password:        result.Password,
+		Img:             result.Img,
+		Subscribers:     float64(result.Subscribers),
+		SubscribedUsers: subscribedUsers,
+	}
+
+	return userResponse, nil
 }
 
 func (r *repositories) CreateUser(ctx context.Context, user query.User) (userID string, err error) {
@@ -75,16 +91,34 @@ func (r *repositories) CreateUser(ctx context.Context, user query.User) (userID 
 	return userID, nil
 }
 
-func (r *repositories) UpdateUser(ctx context.Context, user query.User) (updatedUser *query.User, err error) {
+func (r *repositories) UpdateUser(ctx context.Context, user query.User, userID string) (updatedUser *models.UserResponse, err error) {
 	coll := r.db.Collection("users")
 
+	user.ID, _ = primitive.ObjectIDFromHex(userID)
 	update := bson.M{
 		"$set": user,
 	}
 
-	err = coll.FindOneAndUpdate(ctx, bson.D{{"_id", user.ID}}, update, options.FindOneAndUpdate().SetReturnDocument(options.After)).Decode(&updatedUser)
+	var updatedUserMongo query.User
+
+	err = coll.FindOneAndUpdate(ctx, bson.D{{"_id", user.ID}}, update, options.FindOneAndUpdate().SetReturnDocument(options.After)).Decode(&updatedUserMongo)
 	if err != nil {
-		return nil, errors.New("error when updating user")
+		return nil, err
+	}
+
+	var subscribedUsers []string
+	for _, v := range updatedUserMongo.SubscribedUsers {
+		subscribedUsers = append(subscribedUsers, v.Hex())
+	}
+
+	updatedUser = &models.UserResponse{
+		ID:              userID,
+		Username:        updatedUserMongo.Username,
+		Email:           updatedUserMongo.Email,
+		Img:             updatedUserMongo.Email,
+		Password:        updatedUserMongo.Password,
+		Subscribers:     float64(updatedUserMongo.Subscribers),
+		SubscribedUsers: subscribedUsers,
 	}
 
 	return updatedUser, nil
@@ -103,7 +137,6 @@ func (r *repositories) DeleteUser(ctx context.Context, userID string) (deletedUs
 	return deletedUser.ID.Hex(), nil
 }
 
-// TODO: make validation to prevent duplicate subscribers
 func (r *repositories) Subscribe(ctx context.Context, params query.UpdateSub) error {
 	coll := r.db.Collection("users")
 
@@ -120,16 +153,20 @@ func (r *repositories) Subscribe(ctx context.Context, params query.UpdateSub) er
 
 	if err = mongo.WithSession(ctx, session, func(sc mongo.SessionContext) error {
 		updateSubscribedUsers := bson.M{
-			"$push": bson.M{
+			"$addToSet": bson.M{
 				"subscribedUsers": subscribedID,
 			},
 		}
 
-		_, err := coll.UpdateOne(ctx, bson.D{{"_id", subscribingID}}, updateSubscribedUsers)
+		res, err := coll.UpdateOne(ctx, bson.D{{"_id", subscribingID}}, updateSubscribedUsers)
 		if err != nil {
 			fmt.Println("ERROR: ", err)
 			session.AbortTransaction(sc)
 			return err
+		}
+		if res.ModifiedCount == 0 {
+			session.AbortTransaction(sc)
+			return errors.New("You've already subscribed")
 		}
 
 		updateSubscribers := bson.M{
@@ -151,7 +188,7 @@ func (r *repositories) Subscribe(ctx context.Context, params query.UpdateSub) er
 
 		return nil
 	}); err != nil {
-		fmt.Println(err)
+		return err
 	}
 	session.EndSession(ctx)
 
@@ -180,11 +217,16 @@ func (r *repositories) Unsubscribe(ctx context.Context, params query.UpdateSub) 
 			},
 		}
 
-		_, err := coll.UpdateOne(ctx, bson.D{{"_id", subscribingID}}, updateSubscribedUsers)
+		res, err := coll.UpdateOne(ctx, bson.D{{"_id", subscribingID}}, updateSubscribedUsers)
 		if err != nil {
 			fmt.Println("ERROR: ", err)
 			session.AbortTransaction(sc)
 			return err
+		}
+		if res.ModifiedCount == 0 {
+			fmt.Println("HALO")
+			session.AbortTransaction(sc)
+			return errors.New("You've already unsubscribed")
 		}
 
 		updateSubscribers := bson.M{
@@ -206,7 +248,7 @@ func (r *repositories) Unsubscribe(ctx context.Context, params query.UpdateSub) 
 
 		return nil
 	}); err != nil {
-		fmt.Println(err)
+		return err
 	}
 	session.EndSession(ctx)
 

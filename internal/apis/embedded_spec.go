@@ -440,7 +440,7 @@ func init() {
                 },
                 "user": {
                   "type": "object",
-                  "$ref": "#/definitions/UserRegister"
+                  "$ref": "#/definitions/UserResponse"
                 }
               }
             }
@@ -495,7 +495,7 @@ func init() {
                 },
                 "updatedUser": {
                   "type": "object",
-                  "$ref": "#/definitions/UserUpdate"
+                  "$ref": "#/definitions/UserResponse"
                 }
               }
             }
@@ -575,7 +575,7 @@ func init() {
             "name": "body",
             "in": "body",
             "schema": {
-              "$ref": "#/definitions/Video"
+              "$ref": "#/definitions/VideoPost"
             }
           }
         ],
@@ -609,8 +609,181 @@ func init() {
         }
       }
     },
+    "/video/random": {
+      "get": {
+        "security": [],
+        "description": "Get random videos endpoint",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Video"
+        ],
+        "summary": "Get random videos",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "description": "random videos gotten successfully",
+                  "type": "string"
+                },
+                "videos": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Video"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/video/sub": {
+      "get": {
+        "description": "Get subscribed videos endpoint",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Video"
+        ],
+        "summary": "Get subscribed videos",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "description": "random videos gotten successfully",
+                  "type": "string"
+                },
+                "videos": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Video"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/video/trend": {
+      "get": {
+        "security": [],
+        "description": "Get trending videos endpoint",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Video"
+        ],
+        "summary": "Get trending videos",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "description": "trending videos gotten successfully",
+                  "type": "string"
+                },
+                "videos": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Video"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/video/view/{id}": {
+      "patch": {
+        "description": "Add video view endpoint",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Video"
+        ],
+        "summary": "Add View",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The id of video",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "description": "video gotten successfully",
+                  "type": "string"
+                },
+                "totalViews": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/responses/NotFound"
+          }
+        }
+      }
+    },
     "/video/{id}": {
       "get": {
+        "security": [],
         "description": "Get video endpoint",
         "produces": [
           "application/json"
@@ -679,7 +852,7 @@ func init() {
             "name": "body",
             "in": "body",
             "schema": {
-              "$ref": "#/definitions/Video"
+              "$ref": "#/definitions/VideoUpdate"
             }
           }
         ],
@@ -874,6 +1047,38 @@ func init() {
         }
       }
     },
+    "UserResponse": {
+      "type": "object",
+      "properties": {
+        "ID": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string",
+          "example": "ridwan.rais2@gmail.com"
+        },
+        "img": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string",
+          "example": "123456"
+        },
+        "subscribedUsers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "subscribers": {
+          "type": "number"
+        },
+        "username": {
+          "type": "string",
+          "example": "0889504178114"
+        }
+      }
+    },
     "UserUpdate": {
       "type": "object",
       "properties": {
@@ -917,6 +1122,13 @@ func init() {
         "dislikes"
       ],
       "properties": {
+        "ID": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "example": "2021-09-28T07:38:30.273469Z"
+        },
         "description": {
           "type": "string",
           "example": "My first video."
@@ -946,6 +1158,10 @@ func init() {
           "type": "string",
           "example": "My Video"
         },
+        "updatedAt": {
+          "type": "string",
+          "example": "2021-09-28T07:38:30.273469Z"
+        },
         "userID": {
           "type": "string",
           "example": "1"
@@ -954,7 +1170,69 @@ func init() {
           "type": "string"
         },
         "views": {
-          "type": "number"
+          "type": "integer"
+        }
+      }
+    },
+    "VideoPost": {
+      "type": "object",
+      "required": [
+        "title",
+        "description",
+        "imgUrl",
+        "videoUrl"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "example": "My first video."
+        },
+        "imgUrl": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "title": {
+          "type": "string",
+          "example": "My Video"
+        },
+        "videoUrl": {
+          "type": "string"
+        }
+      }
+    },
+    "VideoUpdate": {
+      "type": "object",
+      "required": [
+        "title",
+        "description",
+        "imgUrl",
+        "videoUrl"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "example": "My first video."
+        },
+        "imgUrl": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "title": {
+          "type": "string",
+          "example": "My Video"
+        },
+        "videoUrl": {
+          "type": "string"
         }
       }
     }
@@ -1493,7 +1771,7 @@ func init() {
                 },
                 "user": {
                   "type": "object",
-                  "$ref": "#/definitions/UserRegister"
+                  "$ref": "#/definitions/UserResponse"
                 }
               }
             }
@@ -1557,7 +1835,7 @@ func init() {
                 },
                 "updatedUser": {
                   "type": "object",
-                  "$ref": "#/definitions/UserUpdate"
+                  "$ref": "#/definitions/UserResponse"
                 }
               }
             }
@@ -1655,7 +1933,7 @@ func init() {
             "name": "body",
             "in": "body",
             "schema": {
-              "$ref": "#/definitions/Video"
+              "$ref": "#/definitions/VideoPost"
             }
           }
         ],
@@ -1698,8 +1976,217 @@ func init() {
         }
       }
     },
+    "/video/random": {
+      "get": {
+        "security": [],
+        "description": "Get random videos endpoint",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Video"
+        ],
+        "summary": "Get random videos",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "description": "random videos gotten successfully",
+                  "type": "string"
+                },
+                "videos": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Video"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "The specified resource was not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/video/sub": {
+      "get": {
+        "description": "Get subscribed videos endpoint",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Video"
+        ],
+        "summary": "Get subscribed videos",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "description": "random videos gotten successfully",
+                  "type": "string"
+                },
+                "videos": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Video"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "The specified resource was not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/video/trend": {
+      "get": {
+        "security": [],
+        "description": "Get trending videos endpoint",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Video"
+        ],
+        "summary": "Get trending videos",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "description": "trending videos gotten successfully",
+                  "type": "string"
+                },
+                "videos": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Video"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "The specified resource was not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/video/view/{id}": {
+      "patch": {
+        "description": "Add video view endpoint",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Video"
+        ],
+        "summary": "Add View",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The id of video",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "description": "video gotten successfully",
+                  "type": "string"
+                },
+                "totalViews": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "The specified resource was not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
     "/video/{id}": {
       "get": {
+        "security": [],
         "description": "Get video endpoint",
         "produces": [
           "application/json"
@@ -1777,7 +2264,7 @@ func init() {
             "name": "body",
             "in": "body",
             "schema": {
-              "$ref": "#/definitions/Video"
+              "$ref": "#/definitions/VideoUpdate"
             }
           }
         ],
@@ -1990,6 +2477,38 @@ func init() {
         }
       }
     },
+    "UserResponse": {
+      "type": "object",
+      "properties": {
+        "ID": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string",
+          "example": "ridwan.rais2@gmail.com"
+        },
+        "img": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string",
+          "example": "123456"
+        },
+        "subscribedUsers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "subscribers": {
+          "type": "number"
+        },
+        "username": {
+          "type": "string",
+          "example": "0889504178114"
+        }
+      }
+    },
     "UserUpdate": {
       "type": "object",
       "properties": {
@@ -2033,6 +2552,13 @@ func init() {
         "dislikes"
       ],
       "properties": {
+        "ID": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "example": "2021-09-28T07:38:30.273469Z"
+        },
         "description": {
           "type": "string",
           "example": "My first video."
@@ -2062,6 +2588,10 @@ func init() {
           "type": "string",
           "example": "My Video"
         },
+        "updatedAt": {
+          "type": "string",
+          "example": "2021-09-28T07:38:30.273469Z"
+        },
         "userID": {
           "type": "string",
           "example": "1"
@@ -2070,7 +2600,69 @@ func init() {
           "type": "string"
         },
         "views": {
-          "type": "number"
+          "type": "integer"
+        }
+      }
+    },
+    "VideoPost": {
+      "type": "object",
+      "required": [
+        "title",
+        "description",
+        "imgUrl",
+        "videoUrl"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "example": "My first video."
+        },
+        "imgUrl": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "title": {
+          "type": "string",
+          "example": "My Video"
+        },
+        "videoUrl": {
+          "type": "string"
+        }
+      }
+    },
+    "VideoUpdate": {
+      "type": "object",
+      "required": [
+        "title",
+        "description",
+        "imgUrl",
+        "videoUrl"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "example": "My first video."
+        },
+        "imgUrl": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "title": {
+          "type": "string",
+          "example": "My Video"
+        },
+        "videoUrl": {
+          "type": "string"
         }
       }
     }

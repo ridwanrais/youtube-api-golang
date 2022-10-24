@@ -6,6 +6,7 @@ import (
 	"github.com/youtube-api-golang/internal/apis/operations/health"
 	"github.com/youtube-api-golang/internal/apis/operations/subscription"
 	"github.com/youtube-api-golang/internal/apis/operations/user"
+	"github.com/youtube-api-golang/internal/apis/operations/video"
 	"github.com/youtube-api-golang/internal/usecase"
 )
 
@@ -29,6 +30,16 @@ type Handlers interface {
 	// subscription
 	SubscribeHandler() subscription.PatchSubUserIDHandlerFunc
 	UnsubscribeHandler() subscription.PatchUnsubUserIDHandlerFunc
+
+	// video
+	AddVideoHandler() video.PostVideoHandlerFunc
+	UpdateVideoHandler() video.PutVideoIDHandlerFunc
+	DeleteVideoHandler() video.DeleteVideoIDHandlerFunc
+	GetVideoByIDHandler() video.GetVideoIDHandlerFunc
+	UpdateViewHandler() video.PatchVideoViewIDHandlerFunc
+	GetRandomVideosHandler() video.GetVideoRandomHandlerFunc
+	GetTrendingVideosHandler() video.GetVideoTrendHandlerFunc
+	GetVideosFromSubscribedChannelsHandler() video.GetVideoSubHandlerFunc
 }
 
 func NewHandler() Handlers {
