@@ -51,7 +51,7 @@ func init() {
             "name": "body",
             "in": "body",
             "schema": {
-              "$ref": "#/definitions/Comment"
+              "$ref": "#/definitions/CommentPost"
             }
           }
         ],
@@ -69,6 +69,105 @@ func init() {
                   "description": "comment created successfully",
                   "type": "string",
                   "example": "comment created successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "description": "Delete comment endpoint",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Comment"
+        ],
+        "summary": "Delete comment",
+        "parameters": [
+          {
+            "description": "delete comment",
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/CommentDelete"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "commentID": {
+                  "type": "string",
+                  "example": "1"
+                },
+                "message": {
+                  "description": "comment deleted successfully",
+                  "type": "string",
+                  "example": "comment deleted successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/comments/{videoID}": {
+      "get": {
+        "security": [],
+        "description": "Get a video's comments endpoint",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Comment"
+        ],
+        "summary": "Get a video's comments",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The id of video",
+            "name": "videoID",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "comments": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Comment"
+                  }
+                },
+                "message": {
+                  "description": "comments gotten successfully",
+                  "type": "string"
                 }
               }
             }
@@ -651,6 +750,57 @@ func init() {
         }
       }
     },
+    "/video/search/": {
+      "get": {
+        "security": [],
+        "description": "Search for videos endpoint",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Video"
+        ],
+        "summary": "Search for videos",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "search keyword",
+            "name": "keyword",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "description": "searched videos gotten successfully",
+                  "type": "string"
+                },
+                "videos": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Video"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/responses/NotFound"
+          }
+        }
+      }
+    },
     "/video/sub": {
       "get": {
         "description": "Get subscribed videos endpoint",
@@ -669,6 +819,57 @@ func init() {
               "properties": {
                 "message": {
                   "description": "random videos gotten successfully",
+                  "type": "string"
+                },
+                "videos": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Video"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/responses/BadRequest"
+          },
+          "404": {
+            "$ref": "#/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/video/tags/": {
+      "get": {
+        "security": [],
+        "description": "Search for videos endpoint",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Video"
+        ],
+        "summary": "Search for videos",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "search keyword",
+            "name": "tags",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "description": "searched videos gotten successfully",
                   "type": "string"
                 },
                 "videos": {
@@ -943,9 +1144,20 @@ func init() {
         "description"
       ],
       "properties": {
+        "ID": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "example": "2021-09-28T07:38:30.273469Z"
+        },
         "description": {
           "type": "string",
           "example": "My first comment."
+        },
+        "updatedAt": {
+          "type": "string",
+          "example": "2021-09-28T07:38:30.273469Z"
         },
         "userID": {
           "type": "string",
@@ -954,6 +1166,40 @@ func init() {
         "videoID": {
           "type": "string",
           "example": "My Comment"
+        }
+      }
+    },
+    "CommentDelete": {
+      "type": "object",
+      "required": [
+        "videoID",
+        "commentID"
+      ],
+      "properties": {
+        "commentID": {
+          "type": "string",
+          "example": "commentID"
+        },
+        "videoID": {
+          "type": "string",
+          "example": "videoID"
+        }
+      }
+    },
+    "CommentPost": {
+      "type": "object",
+      "required": [
+        "videoID",
+        "description"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "example": "My first comment."
+        },
+        "videoID": {
+          "type": "string",
+          "example": "videoID"
         }
       }
     },
@@ -1310,7 +1556,7 @@ func init() {
             "name": "body",
             "in": "body",
             "schema": {
-              "$ref": "#/definitions/Comment"
+              "$ref": "#/definitions/CommentPost"
             }
           }
         ],
@@ -1328,6 +1574,123 @@ func init() {
                   "description": "comment created successfully",
                   "type": "string",
                   "example": "comment created successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "The specified resource was not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Delete comment endpoint",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Comment"
+        ],
+        "summary": "Delete comment",
+        "parameters": [
+          {
+            "description": "delete comment",
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/CommentDelete"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "commentID": {
+                  "type": "string",
+                  "example": "1"
+                },
+                "message": {
+                  "description": "comment deleted successfully",
+                  "type": "string",
+                  "example": "comment deleted successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "The specified resource was not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/comments/{videoID}": {
+      "get": {
+        "security": [],
+        "description": "Get a video's comments endpoint",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Comment"
+        ],
+        "summary": "Get a video's comments",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The id of video",
+            "name": "videoID",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "comments": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Comment"
+                  }
+                },
+                "message": {
+                  "description": "comments gotten successfully",
+                  "type": "string"
                 }
               }
             }
@@ -2027,6 +2390,66 @@ func init() {
         }
       }
     },
+    "/video/search/": {
+      "get": {
+        "security": [],
+        "description": "Search for videos endpoint",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Video"
+        ],
+        "summary": "Search for videos",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "search keyword",
+            "name": "keyword",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "description": "searched videos gotten successfully",
+                  "type": "string"
+                },
+                "videos": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Video"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "The specified resource was not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
     "/video/sub": {
       "get": {
         "description": "Get subscribed videos endpoint",
@@ -2045,6 +2468,66 @@ func init() {
               "properties": {
                 "message": {
                   "description": "random videos gotten successfully",
+                  "type": "string"
+                },
+                "videos": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Video"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "The specified resource was not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/video/tags/": {
+      "get": {
+        "security": [],
+        "description": "Search for videos endpoint",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Video"
+        ],
+        "summary": "Search for videos",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "search keyword",
+            "name": "tags",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "description": "searched videos gotten successfully",
                   "type": "string"
                 },
                 "videos": {
@@ -2373,9 +2856,20 @@ func init() {
         "description"
       ],
       "properties": {
+        "ID": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "example": "2021-09-28T07:38:30.273469Z"
+        },
         "description": {
           "type": "string",
           "example": "My first comment."
+        },
+        "updatedAt": {
+          "type": "string",
+          "example": "2021-09-28T07:38:30.273469Z"
         },
         "userID": {
           "type": "string",
@@ -2384,6 +2878,40 @@ func init() {
         "videoID": {
           "type": "string",
           "example": "My Comment"
+        }
+      }
+    },
+    "CommentDelete": {
+      "type": "object",
+      "required": [
+        "videoID",
+        "commentID"
+      ],
+      "properties": {
+        "commentID": {
+          "type": "string",
+          "example": "commentID"
+        },
+        "videoID": {
+          "type": "string",
+          "example": "videoID"
+        }
+      }
+    },
+    "CommentPost": {
+      "type": "object",
+      "required": [
+        "videoID",
+        "description"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "example": "My first comment."
+        },
+        "videoID": {
+          "type": "string",
+          "example": "videoID"
         }
       }
     },

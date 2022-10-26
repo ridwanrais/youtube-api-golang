@@ -5,7 +5,6 @@ import (
 	"log"
 
 	"github.com/go-openapi/runtime/middleware"
-	"github.com/youtube-api-golang/internal/apis/operations/user"
 	"github.com/youtube-api-golang/internal/apis/operations/video"
 	"github.com/youtube-api-golang/internal/models"
 	"github.com/youtube-api-golang/internal/shared"
@@ -21,7 +20,7 @@ func (h *handler) AddVideoHandler() video.PostVideoHandlerFunc {
 		result, err := h.useCase.AddVideo(context.Background(), params, tokenClaim.UserID)
 
 		if err != nil {
-			return user.NewPostVideoBadRequest().WithPayload(&models.Error{Code: "500", Message: err.Error()})
+			return video.NewPostVideoBadRequest().WithPayload(&models.Error{Code: "500", Message: err.Error()})
 		}
 
 		return video.NewPostVideoOK().WithPayload(result)
@@ -152,6 +151,46 @@ func (h *handler) GetVideosFromSubscribedChannelsHandler() video.GetVideoSubHand
 		}
 
 		return video.NewGetVideoSubOK().WithPayload(&video.GetVideoSubOKBody{
+			Message: "Success",
+			Videos:  arr,
+		})
+	}
+}
+
+func (h *handler) GetVideosByTagsHandler() video.GetVideoTagsHandlerFunc {
+	return func(params video.GetVideoTagsParams) middleware.Responder {
+		result, err := h.useCase.GetVideosByTags(context.Background(), params)
+
+		if err != nil {
+			return video.NewGetVideoTagsBadRequest().WithPayload(&models.Error{Code: "500", Message: err.Error()})
+		}
+
+		var arr []*models.Video
+		for i, _ := range result {
+			arr = append(arr, &result[i])
+		}
+
+		return video.NewGetVideoTagsOK().WithPayload(&video.GetVideoTagsOKBody{
+			Message: "Success",
+			Videos:  arr,
+		})
+	}
+}
+
+func (h *handler) SearchVideosHandler() video.GetVideoSearchHandlerFunc {
+	return func(params video.GetVideoSearchParams) middleware.Responder {
+		result, err := h.useCase.SearchVideos(context.Background(), params)
+
+		if err != nil {
+			return video.NewGetVideoSearchBadRequest().WithPayload(&models.Error{Code: "500", Message: err.Error()})
+		}
+
+		var arr []*models.Video
+		for i, _ := range result {
+			arr = append(arr, &result[i])
+		}
+
+		return video.NewGetVideoSearchOK().WithPayload(&video.GetVideoSearchOKBody{
 			Message: "Success",
 			Videos:  arr,
 		})

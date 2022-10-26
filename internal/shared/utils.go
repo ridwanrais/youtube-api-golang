@@ -5,6 +5,8 @@ import (
 	"math/rand"
 
 	configs "github.com/youtube-api-golang/configs/auth"
+	"github.com/youtube-api-golang/internal/models"
+	"github.com/youtube-api-golang/internal/repositories/query"
 )
 
 func GenerateRandomString(n int) string {
@@ -29,4 +31,42 @@ func InterfaceToTokenClaim(i interface{}) (*configs.AccessTokenClaim, error) {
 	return &claim, nil
 }
 
-// func MapVideoResponse()
+func MapMongoVideoSliceResponse(videos []query.Video) (videoSlice []models.Video) {
+	for _, v := range videos {
+
+		var dislikes []string
+		for _, v := range v.Dislikes {
+			dislikes = append(dislikes, v.Hex())
+		}
+
+		var likes []string
+		for _, v := range v.Likes {
+			likes = append(likes, v.Hex())
+		}
+
+		userIDString := v.UserID.Hex()
+		viewCount := int64(len(v.Views))
+
+		createdAtStr := v.CreatedAt.Format("2022-10-23T17:20:36.524+00:00")
+		updatedAtStr := v.UpdatedAt.Format("2022-10-23T17:20:36.524+00:00")
+
+		video := models.Video{
+			ID:          v.ID.Hex(),
+			Description: &v.Description,
+			Dislikes:    dislikes,
+			Likes:       likes,
+			ImgURL:      &v.ImgURL,
+			Tags:        v.Tags,
+			Title:       &v.Title,
+			UserID:      &userIDString,
+			VideoURL:    &v.VideoURL,
+			Views:       &viewCount,
+			CreatedAt:   createdAtStr,
+			UpdatedAt:   updatedAtStr,
+		}
+
+		videoSlice = append(videoSlice, video)
+	}
+
+	return videoSlice
+}

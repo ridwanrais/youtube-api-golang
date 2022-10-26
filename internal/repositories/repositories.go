@@ -36,6 +36,14 @@ type Repositories interface {
 	GetRandomVideos(ctx context.Context, limit int64) (videoSlice []models.Video, err error)
 	GetTrendingVideos(ctx context.Context, limit int64) (videoSlice []models.Video, err error)
 	GetVideosFromSubscribedChannels(ctx context.Context, subscribedChannels []string) (videos []models.Video, err error)
+	GetVideosByTags(ctx context.Context, tagsArr []string, limit int64) (videos []models.Video, err error)
+	SearchVideos(ctx context.Context, keyword string, limit int64) (videos []models.Video, err error)
+
+	// comment
+	AddComment(ctx context.Context, comment query.Comment) (commentID string, err error)
+	DeleteComment(ctx context.Context, commentID string) (deletedCommentID string, err error)
+	GetCommentsByVideoID(ctx context.Context, videoID string) (commentSlice []models.Comment, err error)
+	GetCommentByID(ctx context.Context, commentID string) (*models.Comment, error)
 }
 
 func NewRepositories(d *mongo.Database) Repositories {

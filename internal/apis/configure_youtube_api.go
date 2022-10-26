@@ -68,6 +68,13 @@ func configureAPI(api *operations.YoutubeAPIAPI) http.Handler {
 	api.VideoGetVideoRandomHandler = mountHandler.GetRandomVideosHandler()
 	api.VideoGetVideoTrendHandler = mountHandler.GetTrendingVideosHandler()
 	api.VideoGetVideoSubHandler = mountHandler.GetVideosFromSubscribedChannelsHandler()
+	api.VideoGetVideoTagsHandler = mountHandler.GetVideosByTagsHandler()
+	api.VideoGetVideoSearchHandler = mountHandler.SearchVideosHandler()
+
+	// comment
+	api.CommentPostCommentHandler = mountHandler.AddCommentHandler()
+	api.CommentDeleteCommentHandler = mountHandler.DeleteCommentHandler()
+	api.CommentGetCommentsVideoIDHandler = mountHandler.GetCommentsByVideoIDHandler()
 
 	api.PreServerShutdown = func() {}
 

@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 	"errors"
+	"strings"
 	"time"
 
 	"github.com/youtube-api-golang/internal/apis/operations/video"
@@ -12,7 +13,6 @@ import (
 )
 
 func (u *useCase) AddVideo(ctx context.Context, params video.PostVideoParams, tokenUserID string) (*video.PostVideoOKBody, error) {
-
 	userID, _ := primitive.ObjectIDFromHex(tokenUserID)
 	now := time.Now()
 	newVideo := query.Video{
@@ -146,4 +146,24 @@ func (u *useCase) GetVideosFromSubscribedChannels(ctx context.Context, userID st
 	}
 
 	return res, nil
+}
+
+func (u *useCase) GetVideosByTags(ctx context.Context, params video.GetVideoTagsParams) (videos []models.Video, err error) {
+	tagsArr := strings.Split(params.Tags, ",")
+
+	videosArr, err := u.repo.GetVideosByTags(ctx, tagsArr, 40)
+	if err != nil {
+		return nil, err
+	}
+
+	return videosArr, nil
+}
+
+func (u *useCase) SearchVideos(ctx context.Context, params video.GetVideoSearchParams) (videos []models.Video, err error) {
+	videosArr, err := u.repo.SearchVideos(ctx, params.Keyword, 40)
+	if err != nil {
+		return nil, err
+	}
+
+	return videosArr, nil
 }

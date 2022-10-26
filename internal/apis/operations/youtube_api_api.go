@@ -50,11 +50,17 @@ func NewYoutubeAPIAPI(spec *loads.Document) *YoutubeAPIAPI {
 
 		JSONProducer: runtime.JSONProducer(),
 
+		CommentDeleteCommentHandler: comment.DeleteCommentHandlerFunc(func(params comment.DeleteCommentParams, principal interface{}) middleware.Responder {
+			return middleware.NotImplemented("operation comment.DeleteComment has not yet been implemented")
+		}),
 		UserDeleteUserIDHandler: user.DeleteUserIDHandlerFunc(func(params user.DeleteUserIDParams, principal interface{}) middleware.Responder {
 			return middleware.NotImplemented("operation user.DeleteUserID has not yet been implemented")
 		}),
 		VideoDeleteVideoIDHandler: video.DeleteVideoIDHandlerFunc(func(params video.DeleteVideoIDParams, principal interface{}) middleware.Responder {
 			return middleware.NotImplemented("operation video.DeleteVideoID has not yet been implemented")
+		}),
+		CommentGetCommentsVideoIDHandler: comment.GetCommentsVideoIDHandlerFunc(func(params comment.GetCommentsVideoIDParams) middleware.Responder {
+			return middleware.NotImplemented("operation comment.GetCommentsVideoID has not yet been implemented")
 		}),
 		HealthGetHealthHandler: health.GetHealthHandlerFunc(func(params health.GetHealthParams, principal interface{}) middleware.Responder {
 			return middleware.NotImplemented("operation health.GetHealth has not yet been implemented")
@@ -68,8 +74,14 @@ func NewYoutubeAPIAPI(spec *loads.Document) *YoutubeAPIAPI {
 		VideoGetVideoRandomHandler: video.GetVideoRandomHandlerFunc(func(params video.GetVideoRandomParams) middleware.Responder {
 			return middleware.NotImplemented("operation video.GetVideoRandom has not yet been implemented")
 		}),
+		VideoGetVideoSearchHandler: video.GetVideoSearchHandlerFunc(func(params video.GetVideoSearchParams) middleware.Responder {
+			return middleware.NotImplemented("operation video.GetVideoSearch has not yet been implemented")
+		}),
 		VideoGetVideoSubHandler: video.GetVideoSubHandlerFunc(func(params video.GetVideoSubParams, principal interface{}) middleware.Responder {
 			return middleware.NotImplemented("operation video.GetVideoSub has not yet been implemented")
+		}),
+		VideoGetVideoTagsHandler: video.GetVideoTagsHandlerFunc(func(params video.GetVideoTagsParams) middleware.Responder {
+			return middleware.NotImplemented("operation video.GetVideoTags has not yet been implemented")
 		}),
 		VideoGetVideoTrendHandler: video.GetVideoTrendHandlerFunc(func(params video.GetVideoTrendParams) middleware.Responder {
 			return middleware.NotImplemented("operation video.GetVideoTrend has not yet been implemented")
@@ -157,10 +169,14 @@ type YoutubeAPIAPI struct {
 	// APIAuthorizer provides access control (ACL/RBAC/ABAC) by providing access to the request and authenticated principal
 	APIAuthorizer runtime.Authorizer
 
+	// CommentDeleteCommentHandler sets the operation handler for the delete comment operation
+	CommentDeleteCommentHandler comment.DeleteCommentHandler
 	// UserDeleteUserIDHandler sets the operation handler for the delete user ID operation
 	UserDeleteUserIDHandler user.DeleteUserIDHandler
 	// VideoDeleteVideoIDHandler sets the operation handler for the delete video ID operation
 	VideoDeleteVideoIDHandler video.DeleteVideoIDHandler
+	// CommentGetCommentsVideoIDHandler sets the operation handler for the get comments video ID operation
+	CommentGetCommentsVideoIDHandler comment.GetCommentsVideoIDHandler
 	// HealthGetHealthHandler sets the operation handler for the get health operation
 	HealthGetHealthHandler health.GetHealthHandler
 	// UserGetUserIDHandler sets the operation handler for the get user ID operation
@@ -169,8 +185,12 @@ type YoutubeAPIAPI struct {
 	VideoGetVideoIDHandler video.GetVideoIDHandler
 	// VideoGetVideoRandomHandler sets the operation handler for the get video random operation
 	VideoGetVideoRandomHandler video.GetVideoRandomHandler
+	// VideoGetVideoSearchHandler sets the operation handler for the get video search operation
+	VideoGetVideoSearchHandler video.GetVideoSearchHandler
 	// VideoGetVideoSubHandler sets the operation handler for the get video sub operation
 	VideoGetVideoSubHandler video.GetVideoSubHandler
+	// VideoGetVideoTagsHandler sets the operation handler for the get video tags operation
+	VideoGetVideoTagsHandler video.GetVideoTagsHandler
 	// VideoGetVideoTrendHandler sets the operation handler for the get video trend operation
 	VideoGetVideoTrendHandler video.GetVideoTrendHandler
 	// LikePatchDislikeVideoIDHandler sets the operation handler for the patch dislike video ID operation
@@ -276,11 +296,17 @@ func (o *YoutubeAPIAPI) Validate() error {
 		unregistered = append(unregistered, "AuthorizationAuth")
 	}
 
+	if o.CommentDeleteCommentHandler == nil {
+		unregistered = append(unregistered, "comment.DeleteCommentHandler")
+	}
 	if o.UserDeleteUserIDHandler == nil {
 		unregistered = append(unregistered, "user.DeleteUserIDHandler")
 	}
 	if o.VideoDeleteVideoIDHandler == nil {
 		unregistered = append(unregistered, "video.DeleteVideoIDHandler")
+	}
+	if o.CommentGetCommentsVideoIDHandler == nil {
+		unregistered = append(unregistered, "comment.GetCommentsVideoIDHandler")
 	}
 	if o.HealthGetHealthHandler == nil {
 		unregistered = append(unregistered, "health.GetHealthHandler")
@@ -294,8 +320,14 @@ func (o *YoutubeAPIAPI) Validate() error {
 	if o.VideoGetVideoRandomHandler == nil {
 		unregistered = append(unregistered, "video.GetVideoRandomHandler")
 	}
+	if o.VideoGetVideoSearchHandler == nil {
+		unregistered = append(unregistered, "video.GetVideoSearchHandler")
+	}
 	if o.VideoGetVideoSubHandler == nil {
 		unregistered = append(unregistered, "video.GetVideoSubHandler")
+	}
+	if o.VideoGetVideoTagsHandler == nil {
+		unregistered = append(unregistered, "video.GetVideoTagsHandler")
 	}
 	if o.VideoGetVideoTrendHandler == nil {
 		unregistered = append(unregistered, "video.GetVideoTrendHandler")
@@ -433,11 +465,19 @@ func (o *YoutubeAPIAPI) initHandlerCache() {
 	if o.handlers["DELETE"] == nil {
 		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}
+	o.handlers["DELETE"]["/comment"] = comment.NewDeleteComment(o.context, o.CommentDeleteCommentHandler)
+	if o.handlers["DELETE"] == nil {
+		o.handlers["DELETE"] = make(map[string]http.Handler)
+	}
 	o.handlers["DELETE"]["/user/{id}"] = user.NewDeleteUserID(o.context, o.UserDeleteUserIDHandler)
 	if o.handlers["DELETE"] == nil {
 		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}
 	o.handlers["DELETE"]["/video/{id}"] = video.NewDeleteVideoID(o.context, o.VideoDeleteVideoIDHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/comments/{videoID}"] = comment.NewGetCommentsVideoID(o.context, o.CommentGetCommentsVideoIDHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
@@ -457,7 +497,15 @@ func (o *YoutubeAPIAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
+	o.handlers["GET"]["/video/search"] = video.NewGetVideoSearch(o.context, o.VideoGetVideoSearchHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
 	o.handlers["GET"]["/video/sub"] = video.NewGetVideoSub(o.context, o.VideoGetVideoSubHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/video/tags"] = video.NewGetVideoTags(o.context, o.VideoGetVideoTagsHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}

@@ -8,6 +8,7 @@ import (
 
 	"github.com/youtube-api-golang/internal/models"
 	"github.com/youtube-api-golang/internal/repositories/query"
+	"github.com/youtube-api-golang/internal/shared"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -165,38 +166,7 @@ func (r *repositories) GetRandomVideos(ctx context.Context, limit int64) (videoS
 		return nil, err
 	}
 
-	for _, v := range videos {
-
-		var dislikes []string
-		for _, v := range v.Dislikes {
-			dislikes = append(dislikes, v.Hex())
-		}
-
-		var likes []string
-		for _, v := range v.Likes {
-			likes = append(likes, v.Hex())
-		}
-
-		userIDString := v.UserID.Hex()
-		viewCount := int64(len(v.Views))
-
-		video := models.Video{
-			ID:          v.ID.Hex(),
-			Description: &v.Description,
-			Dislikes:    dislikes,
-			Likes:       likes,
-			ImgURL:      &v.ImgURL,
-			Tags:        v.Tags,
-			Title:       &v.Title,
-			UserID:      &userIDString,
-			VideoURL:    &v.VideoURL,
-			Views:       &viewCount,
-		}
-
-		videoSlice = append(videoSlice, video)
-	}
-
-	return videoSlice, nil
+	return shared.MapMongoVideoSliceResponse(videos), nil
 }
 
 func (r *repositories) GetTrendingVideos(ctx context.Context, limit int64) (videoSlice []models.Video, err error) {
@@ -213,41 +183,11 @@ func (r *repositories) GetTrendingVideos(ctx context.Context, limit int64) (vide
 		return nil, err
 	}
 
-	for _, v := range videos {
-		var dislikes []string
-		for _, v := range v.Dislikes {
-			dislikes = append(dislikes, v.Hex())
-		}
-
-		var likes []string
-		for _, v := range v.Likes {
-			likes = append(likes, v.Hex())
-		}
-
-		userIDString := v.UserID.Hex()
-		viewCount := int64(len(v.Views))
-
-		video := models.Video{
-			ID:          v.ID.Hex(),
-			Description: &v.Description,
-			Dislikes:    dislikes,
-			Likes:       likes,
-			ImgURL:      &v.ImgURL,
-			Tags:        v.Tags,
-			Title:       &v.Title,
-			UserID:      &userIDString,
-			VideoURL:    &v.VideoURL,
-			Views:       &viewCount,
-		}
-
-		videoSlice = append(videoSlice, video)
-	}
+	videoSlice = shared.MapMongoVideoSliceResponse(videos)
 
 	sort.Slice(videoSlice, func(i, j int) bool {
 		return *videoSlice[i].Views > *videoSlice[j].Views
 	})
-
-	fmt.Println("TESTTTTTTTTTTTTTT", videoSlice[0])
 
 	return videoSlice, nil
 }
@@ -265,7 +205,7 @@ func (r *repositories) GetVideosFromSubscribedChannels(ctx context.Context, subs
 		}
 
 		var resVideos []query.Video
-		err = cursor.Decode(&resVideos)
+		err = cursor.All(ctx, &resVideos)
 		if err != nil {
 			return nil, err
 		}
@@ -277,42 +217,51 @@ func (r *repositories) GetVideosFromSubscribedChannels(ctx context.Context, subs
 		return totalVideos[i].CreatedAt.Before(totalVideos[i].CreatedAt)
 	})
 
-	var videoSlice []models.Video
-	for _, v := range totalVideos {
+	return shared.MapMongoVideoSliceResponse(totalVideos), nil
+}
 
-		var dislikes []string
-		for _, v := range v.Dislikes {
-			dislikes = append(dislikes, v.Hex())
-		}
+func (r *repositories) GetVideosByTags(ctx context.Context, tagsArr []string, limit int64) (videos []models.Video, err error) {
+	coll := r.db.Collection("videos")
 
-		var likes []string
-		for _, v := range v.Likes {
-			likes = append(likes, v.Hex())
-		}
-
-		userIDString := v.UserID.Hex()
-		viewCount := int64(len(v.Views))
-
-		createdAtStr := v.CreatedAt.Format("2022-10-23T17:20:36.524+00:00")
-		updatedAtStr := v.UpdatedAt.Format("2022-10-23T17:20:36.524+00:00")
-
-		video := models.Video{
-			ID:          v.ID.Hex(),
-			Description: &v.Description,
-			Dislikes:    dislikes,
-			Likes:       likes,
-			ImgURL:      &v.ImgURL,
-			Tags:        v.Tags,
-			Title:       &v.Title,
-			UserID:      &userIDString,
-			VideoURL:    &v.VideoURL,
-			Views:       &viewCount,
-			CreatedAt:   createdAtStr,
-			UpdatedAt:   updatedAtStr,
-		}
-
-		videoSlice = append(videoSlice, video)
+	filter := bson.M{
+		"tags": bson.M{
+			"$in": tagsArr,
+		},
 	}
 
-	return videoSlice, nil
+	cursor, err := coll.Find(ctx, filter, options.Find().SetLimit(limit))
+	if err != nil {
+		return nil, err
+	}
+
+	var videosMongo []query.Video
+	err = cursor.All(ctx, &videosMongo)
+	if err != nil {
+		return nil, err
+	}
+
+	return shared.MapMongoVideoSliceResponse(videosMongo), nil
+}
+
+func (r *repositories) SearchVideos(ctx context.Context, keyword string, limit int64) (videos []models.Video, err error) {
+	coll := r.db.Collection("videos")
+
+	filter := bson.M{
+		"title": bson.M{
+			"$regex": primitive.Regex{Pattern: keyword, Options: "i"},
+		},
+	}
+
+	cursor, err := coll.Find(ctx, filter, options.Find().SetLimit(limit))
+	if err != nil {
+		return nil, err
+	}
+
+	var videosMongo []query.Video
+	err = cursor.All(ctx, &videosMongo)
+	if err != nil {
+		return nil, err
+	}
+
+	return shared.MapMongoVideoSliceResponse(videosMongo), nil
 }

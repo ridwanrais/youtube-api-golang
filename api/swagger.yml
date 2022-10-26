@@ -605,6 +605,74 @@ paths:
           $ref: "#/responses/BadRequest"
         "404":
           $ref: "#/responses/NotFound"
+  /video/tags/:
+    get:
+      summary: "Search for videos"
+      description: "Search for videos endpoint"
+      tags:
+        - Video
+      produces:
+        - application/json
+      parameters:
+        - in: "query"
+          required: true
+          name: "tags"
+          type: string
+          description: "search keyword"
+      security: []
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            type: object
+            properties:
+              message:
+                type: "string"
+                description: "searched videos gotten successfully"
+              videos:
+                type: array
+                items:
+                  $ref: "#/definitions/Video"
+        "400":
+          $ref: "#/responses/BadRequest"
+        "401":
+          $ref: "#/responses/BadRequest"
+        "404":
+          $ref: "#/responses/NotFound"
+  /video/search/:
+    get:
+      summary: "Search for videos"
+      description: "Search for videos endpoint"
+      tags:
+        - Video
+      produces:
+        - application/json
+      parameters:
+        - in: "query"
+          required: true
+          name: "keyword"
+          type: "string"
+          description: "search keyword"
+      security: []
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            type: object
+            properties:
+              message:
+                type: "string"
+                description: "searched videos gotten successfully"
+              videos:
+                type: array
+                items:
+                  $ref: "#/definitions/Video"
+        "400":
+          $ref: "#/responses/BadRequest"
+        "401":
+          $ref: "#/responses/BadRequest"
+        "404":
+          $ref: "#/responses/NotFound"
 
   /comment:
     post:
@@ -619,7 +687,7 @@ paths:
           name: body
           description: post comment
           schema:
-            $ref: "#/definitions/Comment"
+            $ref: "#/definitions/CommentPost"
       responses:
         "200":
           description: "Success"
@@ -639,6 +707,74 @@ paths:
           $ref: "#/responses/BadRequest"
         "404":
           $ref: "#/responses/NotFound"
+    delete:
+      summary: "Delete comment"
+      description: "Delete comment endpoint"
+      tags:
+        - Comment
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: delete comment
+          schema:
+            $ref: "#/definitions/CommentDelete"
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            type: object
+            properties:
+              message:
+                type: "string"
+                description: "comment deleted successfully"
+                example: "comment deleted successfully"
+              commentID:
+                type: string
+                example: "1"
+        "400":
+          $ref: "#/responses/BadRequest"
+        "401":
+          $ref: "#/responses/BadRequest"
+        "404":
+          $ref: "#/responses/NotFound"
+  /comments/{videoID}:
+    get:
+      summary: Get a video's comments
+      description: Get a video's comments endpoint
+      tags:
+        - Comment
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          required: true
+          name: videoID
+          type: "string"
+          description: "The id of video"
+      security: []      
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            type: object
+            properties:
+              message:
+                type: "string"
+                description: "comments gotten successfully"
+              comments:
+                type: array
+                items: 
+                  $ref: "#/definitions/Comment"
+        "400":
+          $ref: "#/responses/BadRequest"
+        "401":
+          $ref: "#/responses/BadRequest"
+        "404":
+          $ref: "#/responses/NotFound"
+
+
 
 definitions:
   Health:
@@ -834,6 +970,31 @@ definitions:
         type: string
         example: 2021-09-28T07:38:30.273469Z
 
+  CommentPost:
+    type: object
+    required:
+      - videoID
+      - description
+    properties:
+      videoID:
+        type: string
+        example: "videoID"
+      description:
+        type: string
+        example: "My first comment."
+  CommentDelete:
+    type: object
+    required:
+      - videoID
+      - commentID
+    properties:
+      videoID:
+        type: string
+        example: "videoID"
+      commentID:
+        type: string
+        example: "commentID"
+
   Comment:
     type: object
     required:
@@ -841,6 +1002,8 @@ definitions:
       - videoID
       - description
     properties:
+      ID:
+        type: string
       userID:
         type: string
         example: "1"
@@ -850,7 +1013,12 @@ definitions:
       description:
         type: string
         example: "My first comment."
-      # timestamps:
+      createdAt:
+        type: string
+        example: 2021-09-28T07:38:30.273469Z
+      updatedAt:
+        type: string
+        example: 2021-09-28T07:38:30.273469Z
 
   Error:
     type: object

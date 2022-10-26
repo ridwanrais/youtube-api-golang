@@ -3,6 +3,7 @@ package handler
 import (
 	"github.com/youtube-api-golang/configs"
 	"github.com/youtube-api-golang/internal/apis/operations/auth"
+	"github.com/youtube-api-golang/internal/apis/operations/comment"
 	"github.com/youtube-api-golang/internal/apis/operations/health"
 	"github.com/youtube-api-golang/internal/apis/operations/subscription"
 	"github.com/youtube-api-golang/internal/apis/operations/user"
@@ -40,6 +41,13 @@ type Handlers interface {
 	GetRandomVideosHandler() video.GetVideoRandomHandlerFunc
 	GetTrendingVideosHandler() video.GetVideoTrendHandlerFunc
 	GetVideosFromSubscribedChannelsHandler() video.GetVideoSubHandlerFunc
+	GetVideosByTagsHandler() video.GetVideoTagsHandlerFunc
+	SearchVideosHandler() video.GetVideoSearchHandlerFunc
+
+	// comment
+	AddCommentHandler() comment.PostCommentHandlerFunc
+	DeleteCommentHandler() comment.DeleteCommentHandlerFunc
+	GetCommentsByVideoIDHandler() comment.GetCommentsVideoIDHandlerFunc
 }
 
 func NewHandler() Handlers {

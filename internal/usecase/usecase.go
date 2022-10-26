@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/youtube-api-golang/internal/apis/operations/auth"
+	"github.com/youtube-api-golang/internal/apis/operations/comment"
 	"github.com/youtube-api-golang/internal/apis/operations/subscription"
 	"github.com/youtube-api-golang/internal/apis/operations/user"
 	"github.com/youtube-api-golang/internal/apis/operations/video"
@@ -40,6 +41,13 @@ type UseCase interface {
 	GetRandomVideos(ctx context.Context) (videoSlice []models.Video, err error)
 	GetTrendingVideos(ctx context.Context) (videoSlice []models.Video, err error)
 	GetVideosFromSubscribedChannels(ctx context.Context, userID string) (videos []models.Video, err error)
+	GetVideosByTags(ctx context.Context, params video.GetVideoTagsParams) (videos []models.Video, err error)
+	SearchVideos(ctx context.Context, params video.GetVideoSearchParams) (videos []models.Video, err error)
+
+	// comment
+	AddComment(ctx context.Context, params comment.PostCommentParams, tokenUserID string) (commentID string, err error)
+	DeleteComment(ctx context.Context, params comment.DeleteCommentParams, tokenUserID string) (deletedCommentID string, err error)
+	GetCommentsByVideoID(ctx context.Context, videoID string) (commentSlice []models.Comment, err error)
 }
 
 func NewUseCase(r repositories.Repositories) UseCase {
