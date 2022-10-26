@@ -11,4 +11,4 @@ You can see the API documentation by visiting [this link](https://app.swaggerhub
 
 Frontend Repo: COMING SOON!
 
-Deployed WebAPP: COMING SOON!
+Deployed Web App: COMING SOON!
