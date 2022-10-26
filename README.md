@@ -7,5 +7,8 @@ For the database, I use MongoDB because I've been using PostgreSQL and MySQL too
 
 Last but not least, I implement Clean Architecture paradigm to make the API more scalable and easier to maintain.
 
+You can see the API documentation by visiting [this link](https://app.swaggerhub.com/apis/ridwanrais2/youtube-clone-api/1)
+
 Frontend Repo: COMING SOON!
+
 Deployed WebAPP: COMING SOON!
