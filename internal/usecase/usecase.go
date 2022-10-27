@@ -5,6 +5,7 @@ import (
 
 	"github.com/youtube-api-golang/internal/apis/operations/auth"
 	"github.com/youtube-api-golang/internal/apis/operations/comment"
+	"github.com/youtube-api-golang/internal/apis/operations/like"
 	"github.com/youtube-api-golang/internal/apis/operations/subscription"
 	"github.com/youtube-api-golang/internal/apis/operations/user"
 	"github.com/youtube-api-golang/internal/apis/operations/video"
@@ -48,6 +49,10 @@ type UseCase interface {
 	AddComment(ctx context.Context, params comment.PostCommentParams, tokenUserID string) (commentID string, err error)
 	DeleteComment(ctx context.Context, params comment.DeleteCommentParams, tokenUserID string) (deletedCommentID string, err error)
 	GetCommentsByVideoID(ctx context.Context, videoID string) (commentSlice []models.Comment, err error)
+
+	// like
+	UpdateVideoLike(ctx context.Context, params like.PatchLikeVideoIDParams, tokenUserID string) (likeCount *int, err error)
+	UpdateVideoDislike(ctx context.Context, params like.PatchDislikeVideoIDParams, tokenUserID string) (likeCount *int, err error)
 }
 
 func NewUseCase(r repositories.Repositories) UseCase {

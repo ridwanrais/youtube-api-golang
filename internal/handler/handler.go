@@ -5,6 +5,7 @@ import (
 	"github.com/youtube-api-golang/internal/apis/operations/auth"
 	"github.com/youtube-api-golang/internal/apis/operations/comment"
 	"github.com/youtube-api-golang/internal/apis/operations/health"
+	"github.com/youtube-api-golang/internal/apis/operations/like"
 	"github.com/youtube-api-golang/internal/apis/operations/subscription"
 	"github.com/youtube-api-golang/internal/apis/operations/user"
 	"github.com/youtube-api-golang/internal/apis/operations/video"
@@ -48,6 +49,10 @@ type Handlers interface {
 	AddCommentHandler() comment.PostCommentHandlerFunc
 	DeleteCommentHandler() comment.DeleteCommentHandlerFunc
 	GetCommentsByVideoIDHandler() comment.GetCommentsVideoIDHandlerFunc
+
+	// like
+	UpdateVideoLikeHandler() like.PatchLikeVideoIDHandlerFunc
+	UpdateVideoDislikeHandler() like.PatchDislikeVideoIDHandlerFunc
 }
 
 func NewHandler() Handlers {

@@ -345,7 +345,7 @@ paths:
                 type: "string"
                 description: "disliking a video is successful"
                 example: "disliking a video is successful"
-              likeCount:
+              dislikeCount:
                 type: integer
                 example: 100
         "400":

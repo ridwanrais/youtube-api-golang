@@ -160,7 +160,6 @@ func (r *repositories) Subscribe(ctx context.Context, params query.UpdateSub) er
 
 		res, err := coll.UpdateOne(ctx, bson.D{{"_id", subscribingID}}, updateSubscribedUsers)
 		if err != nil {
-			fmt.Println("ERROR: ", err)
 			session.AbortTransaction(sc)
 			return err
 		}
@@ -177,7 +176,6 @@ func (r *repositories) Subscribe(ctx context.Context, params query.UpdateSub) er
 
 		_, err = coll.UpdateOne(ctx, bson.D{{"_id", subscribedID}}, updateSubscribers)
 		if err != nil {
-			fmt.Println("ERROR: ", err)
 			session.AbortTransaction(sc)
 			return err
 		}
@@ -219,12 +217,10 @@ func (r *repositories) Unsubscribe(ctx context.Context, params query.UpdateSub) 
 
 		res, err := coll.UpdateOne(ctx, bson.D{{"_id", subscribingID}}, updateSubscribedUsers)
 		if err != nil {
-			fmt.Println("ERROR: ", err)
 			session.AbortTransaction(sc)
 			return err
 		}
 		if res.ModifiedCount == 0 {
-			fmt.Println("HALO")
 			session.AbortTransaction(sc)
 			return errors.New("You've already unsubscribed")
 		}

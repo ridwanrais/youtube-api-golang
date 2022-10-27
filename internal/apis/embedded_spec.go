@@ -209,7 +209,7 @@ func init() {
             "schema": {
               "type": "object",
               "properties": {
-                "likeCount": {
+                "dislikeCount": {
                   "type": "integer",
                   "example": 100
                 },
@@ -1741,7 +1741,7 @@ func init() {
             "schema": {
               "type": "object",
               "properties": {
-                "likeCount": {
+                "dislikeCount": {
                   "type": "integer",
                   "example": 100
                 },

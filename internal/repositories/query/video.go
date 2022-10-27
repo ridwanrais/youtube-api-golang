@@ -25,3 +25,8 @@ type UpdateView struct {
 	VideoID string
 	UserID  string
 }
+
+type UpdateLike struct {
+	VideoID string
+	UserID  string
+}

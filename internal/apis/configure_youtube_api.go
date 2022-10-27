@@ -76,6 +76,10 @@ func configureAPI(api *operations.YoutubeAPIAPI) http.Handler {
 	api.CommentDeleteCommentHandler = mountHandler.DeleteCommentHandler()
 	api.CommentGetCommentsVideoIDHandler = mountHandler.GetCommentsByVideoIDHandler()
 
+	// like
+	api.LikePatchLikeVideoIDHandler = mountHandler.UpdateVideoLikeHandler()
+	api.LikePatchDislikeVideoIDHandler = mountHandler.UpdateVideoDislikeHandler()
+
 	api.PreServerShutdown = func() {}
 
 	api.ServerShutdown = func() {}

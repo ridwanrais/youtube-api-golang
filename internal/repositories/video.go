@@ -142,7 +142,7 @@ func (r *repositories) UpdateView(ctx context.Context, params query.UpdateView) 
 		},
 	}
 
-	err = coll.FindOneAndUpdate(ctx, bson.D{{"_id", videoID}}, updateView).Decode(&video)
+	err = coll.FindOneAndUpdate(ctx, bson.D{{"_id", videoID}}, updateView, options.MergeFindOneAndUpdateOptions().SetReturnDocument(options.After)).Decode(&video)
 	if err != nil {
 		return nil, err
 	}
@@ -264,4 +264,52 @@ func (r *repositories) SearchVideos(ctx context.Context, keyword string, limit i
 	}
 
 	return shared.MapMongoVideoSliceResponse(videosMongo), nil
+}
+
+func (r *repositories) UpdateVideoLike(ctx context.Context, params query.UpdateLike) (likeCount *int, err error) {
+	coll := r.db.Collection("videos")
+	videoID, _ := primitive.ObjectIDFromHex(params.VideoID)
+	userID, _ := primitive.ObjectIDFromHex(params.UserID)
+
+	updateLikes := bson.M{
+		"$addToSet": bson.M{
+			"likes": userID,
+		},
+		"$pull": bson.M{
+			"dislikes": userID,
+		},
+	}
+
+	var video *query.Video
+	err = coll.FindOneAndUpdate(ctx, bson.D{{"_id", videoID}}, updateLikes, options.MergeFindOneAndUpdateOptions().SetReturnDocument(options.After)).Decode(&video)
+	if err != nil {
+		return nil, err
+	}
+
+	likes := len(video.Likes)
+	return &likes, nil
+}
+
+func (r *repositories) UpdateVideoDislike(ctx context.Context, params query.UpdateLike) (likeCount *int, err error) {
+	coll := r.db.Collection("videos")
+	videoID, _ := primitive.ObjectIDFromHex(params.VideoID)
+	userID, _ := primitive.ObjectIDFromHex(params.UserID)
+
+	updateDislikes := bson.M{
+		"$addToSet": bson.M{
+			"dislikes": userID,
+		},
+		"$pull": bson.M{
+			"likes": userID,
+		},
+	}
+
+	var video *query.Video
+	err = coll.FindOneAndUpdate(ctx, bson.D{{"_id", videoID}}, updateDislikes, options.MergeFindOneAndUpdateOptions().SetReturnDocument(options.After)).Decode(&video)
+	if err != nil {
+		return nil, err
+	}
+
+	dislikes := len(video.Dislikes)
+	return &dislikes, nil
 }
