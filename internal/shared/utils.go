@@ -3,6 +3,7 @@ package shared
 import (
 	"encoding/json"
 	"math/rand"
+	"time"
 
 	configs "github.com/youtube-api-golang/configs/auth"
 	"github.com/youtube-api-golang/internal/models"
@@ -47,20 +48,20 @@ func MapMongoVideoSliceResponse(videos []query.Video) (videoSlice []models.Video
 		userIDString := v.UserID.Hex()
 		viewCount := int64(len(v.Views))
 
-		createdAtStr := v.CreatedAt.Format("2022-10-23T17:20:36.524+00:00")
-		updatedAtStr := v.UpdatedAt.Format("2022-10-23T17:20:36.524+00:00")
+		createdAtStr := v.CreatedAt.Format(time.UnixDate)
+		updatedAtStr := v.UpdatedAt.Format(time.UnixDate)
 
 		video := models.Video{
 			ID:          v.ID.Hex(),
-			Description: &v.Description,
+			Description: v.Description,
 			Dislikes:    dislikes,
 			Likes:       likes,
-			ImgURL:      &v.ImgURL,
+			ImgURL:      v.ImgURL,
 			Tags:        v.Tags,
-			Title:       &v.Title,
-			UserID:      &userIDString,
-			VideoURL:    &v.VideoURL,
-			Views:       &viewCount,
+			Title:       v.Title,
+			UserID:      userIDString,
+			VideoURL:    v.VideoURL,
+			Views:       viewCount,
 			CreatedAt:   createdAtStr,
 			UpdatedAt:   updatedAtStr,
 		}

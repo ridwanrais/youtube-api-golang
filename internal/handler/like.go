@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"log"
+	"os"
 
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/youtube-api-golang/internal/apis/operations/like"
@@ -26,7 +27,7 @@ func (h *handler) UpdateVideoLikeHandler() like.PatchLikeVideoIDHandlerFunc {
 		return like.NewPatchLikeVideoIDOK().WithPayload(&like.PatchLikeVideoIDOKBody{
 			Message:   "Success",
 			LikeCount: int64(*result),
-		})
+		}).WithAccessControlAllowOrigin(os.Getenv("CLIENT_URL"))
 	}
 }
 
@@ -46,6 +47,6 @@ func (h *handler) UpdateVideoDislikeHandler() like.PatchDislikeVideoIDHandlerFun
 		return like.NewPatchDislikeVideoIDOK().WithPayload(&like.PatchDislikeVideoIDOKBody{
 			Message:      "Success",
 			DislikeCount: int64(*result),
-		})
+		}).WithAccessControlAllowOrigin(os.Getenv("CLIENT_URL"))
 	}
 }

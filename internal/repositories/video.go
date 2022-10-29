@@ -18,6 +18,7 @@ import (
 func (r *repositories) AddVideo(ctx context.Context, video query.Video) (videoID string, err error) {
 	coll := r.db.Collection("videos")
 
+	video = query.NewVideo(video)
 	result, err := coll.InsertOne(ctx, video)
 	if err != nil {
 		return "", err
@@ -58,15 +59,15 @@ func (r *repositories) GetVideoByID(ctx context.Context, videoID string) (video 
 
 	videoResponse := &models.Video{
 		ID:          result.ID.Hex(),
-		Description: &result.Description,
+		Description: result.Description,
 		Dislikes:    dislikes,
 		Likes:       likes,
-		ImgURL:      &result.ImgURL,
+		ImgURL:      result.ImgURL,
 		Tags:        result.Tags,
-		Title:       &result.Title,
-		UserID:      &userIDString,
-		VideoURL:    &result.VideoURL,
-		Views:       &viewCount,
+		Title:       result.Title,
+		UserID:      userIDString,
+		VideoURL:    result.VideoURL,
+		Views:       viewCount,
 	}
 
 	return videoResponse, nil
@@ -102,15 +103,15 @@ func (r *repositories) UpdateVideo(ctx context.Context, video query.Video, video
 
 	updatedVideo = &models.Video{
 		ID:          videoID,
-		Description: &updatedVideoMongo.Description,
+		Description: updatedVideoMongo.Description,
 		Dislikes:    dislikes,
 		Likes:       likes,
-		ImgURL:      &updatedVideoMongo.ImgURL,
+		ImgURL:      updatedVideoMongo.ImgURL,
 		Tags:        updatedVideoMongo.Tags,
-		Title:       &updatedVideoMongo.Title,
-		UserID:      &userIDString,
-		VideoURL:    &updatedVideoMongo.VideoURL,
-		Views:       &viewCount,
+		Title:       updatedVideoMongo.Title,
+		UserID:      userIDString,
+		VideoURL:    updatedVideoMongo.VideoURL,
+		Views:       viewCount,
 	}
 
 	return updatedVideo, nil
@@ -186,7 +187,7 @@ func (r *repositories) GetTrendingVideos(ctx context.Context, limit int64) (vide
 	videoSlice = shared.MapMongoVideoSliceResponse(videos)
 
 	sort.Slice(videoSlice, func(i, j int) bool {
-		return *videoSlice[i].Views > *videoSlice[j].Views
+		return videoSlice[i].Views > videoSlice[j].Views
 	})
 
 	return videoSlice, nil

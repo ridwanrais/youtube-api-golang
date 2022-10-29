@@ -22,6 +22,10 @@ GetHealthOK Success
 swagger:response getHealthOK
 */
 type GetHealthOK struct {
+	/*
+
+	 */
+	AccessControlAllowOrigin string `json:"Access-Control-Allow-Origin"`
 
 	/*
 	  In: Body
@@ -33,6 +37,17 @@ type GetHealthOK struct {
 func NewGetHealthOK() *GetHealthOK {
 
 	return &GetHealthOK{}
+}
+
+// WithAccessControlAllowOrigin adds the accessControlAllowOrigin to the get health o k response
+func (o *GetHealthOK) WithAccessControlAllowOrigin(accessControlAllowOrigin string) *GetHealthOK {
+	o.AccessControlAllowOrigin = accessControlAllowOrigin
+	return o
+}
+
+// SetAccessControlAllowOrigin sets the accessControlAllowOrigin to the get health o k response
+func (o *GetHealthOK) SetAccessControlAllowOrigin(accessControlAllowOrigin string) {
+	o.AccessControlAllowOrigin = accessControlAllowOrigin
 }
 
 // WithPayload adds the payload to the get health o k response
@@ -48,6 +63,13 @@ func (o *GetHealthOK) SetPayload(payload *GetHealthOKBody) {
 
 // WriteResponse to the client
 func (o *GetHealthOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	// response header Access-Control-Allow-Origin
+
+	accessControlAllowOrigin := o.AccessControlAllowOrigin
+	if accessControlAllowOrigin != "" {
+		rw.Header().Set("Access-Control-Allow-Origin", accessControlAllowOrigin)
+	}
 
 	rw.WriteHeader(200)
 	if o.Payload != nil {

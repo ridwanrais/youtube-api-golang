@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"log"
+	"os"
 
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/youtube-api-golang/internal/apis/operations/subscription"
@@ -25,7 +26,7 @@ func (h *handler) SubscribeHandler() subscription.PatchSubUserIDHandlerFunc {
 
 		return subscription.NewPatchSubUserIDOK().WithPayload(
 			&subscription.PatchSubUserIDOKBody{Message: "Success"},
-		)
+		).WithAccessControlAllowOrigin(os.Getenv("CLIENT_URL"))
 	}
 }
 
@@ -44,6 +45,6 @@ func (h *handler) UnsubscribeHandler() subscription.PatchUnsubUserIDHandlerFunc 
 
 		return subscription.NewPatchUnsubUserIDOK().WithPayload(
 			&subscription.PatchUnsubUserIDOKBody{Message: "Success"},
-		)
+		).WithAccessControlAllowOrigin(os.Getenv("CLIENT_URL"))
 	}
 }

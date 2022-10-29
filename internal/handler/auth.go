@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"fmt"
+	"os"
 
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/youtube-api-golang/internal/apis/operations/auth"
@@ -17,6 +18,6 @@ func (h *handler) LoginHandler() auth.PostUserLoginHandlerFunc {
 			return auth.NewPostUserLoginBadRequest().WithPayload(&models.Error{Code: "500", Message: err.Error()})
 		}
 
-		return auth.NewPostUserLoginOK().WithPayload(res).WithSetCookie(fmt.Sprintf("access_token=%s; Path=/; Expires=%s; HttpOnly", res.Value, res.ExpiredAt))
+		return auth.NewPostUserLoginOK().WithPayload(res).WithSetCookie(fmt.Sprintf("access_token=%s; Path=/; Expires=%s; HttpOnly", res.Value, res.ExpiredAt)).WithAccessControlAllowOrigin(os.Getenv("CLIENT_URL"))
 	}
 }

@@ -81,6 +81,7 @@ func (r *repositories) GetUserByID(ctx context.Context, userID string) (user *mo
 func (r *repositories) CreateUser(ctx context.Context, user query.User) (userID string, err error) {
 	coll := r.db.Collection("users")
 
+	user = query.NewUser(user)
 	result, err := coll.InsertOne(ctx, user)
 	if err != nil {
 		return "", errors.New("error when creating user")

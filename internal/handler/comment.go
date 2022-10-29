@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"log"
+	"os"
 
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/youtube-api-golang/internal/apis/operations/comment"
@@ -28,7 +29,7 @@ func (h *handler) AddCommentHandler() comment.PostCommentHandlerFunc {
 				Message:   "Success",
 				CommentID: commentID,
 			},
-		)
+		).WithAccessControlAllowOrigin(os.Getenv("CLIENT_URL"))
 	}
 }
 
@@ -50,7 +51,7 @@ func (h *handler) DeleteCommentHandler() comment.DeleteCommentHandlerFunc {
 				Message:   "Success",
 				CommentID: deletedCommentID,
 			},
-		)
+		).WithAccessControlAllowOrigin(os.Getenv("CLIENT_URL"))
 	}
 }
 
@@ -71,6 +72,6 @@ func (h *handler) GetCommentsByVideoIDHandler() comment.GetCommentsVideoIDHandle
 				Message:  "Success",
 				Comments: arr,
 			},
-		)
+		).WithAccessControlAllowOrigin(os.Getenv("CLIENT_URL"))
 	}
 }

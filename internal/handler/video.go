@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"log"
+	"os"
 
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/youtube-api-golang/internal/apis/operations/video"
@@ -23,7 +24,7 @@ func (h *handler) AddVideoHandler() video.PostVideoHandlerFunc {
 			return video.NewPostVideoBadRequest().WithPayload(&models.Error{Code: "500", Message: err.Error()})
 		}
 
-		return video.NewPostVideoOK().WithPayload(result)
+		return video.NewPostVideoOK().WithPayload(result).WithAccessControlAllowOrigin(os.Getenv("CLIENT_URL"))
 	}
 }
 
@@ -40,7 +41,7 @@ func (h *handler) DeleteVideoHandler() video.DeleteVideoIDHandlerFunc {
 			return video.NewDeleteVideoIDBadRequest().WithPayload(&models.Error{Code: "500", Message: err.Error()})
 		}
 
-		return video.NewDeleteVideoIDOK().WithPayload(result)
+		return video.NewDeleteVideoIDOK().WithPayload(result).WithAccessControlAllowOrigin(os.Getenv("CLIENT_URL"))
 	}
 }
 
@@ -57,7 +58,7 @@ func (h *handler) UpdateVideoHandler() video.PutVideoIDHandlerFunc {
 			return video.NewPutVideoIDBadRequest().WithPayload(&models.Error{Code: "500", Message: err.Error()})
 		}
 
-		return video.NewPutVideoIDOK().WithPayload(result)
+		return video.NewPutVideoIDOK().WithPayload(result).WithAccessControlAllowOrigin(os.Getenv("CLIENT_URL"))
 	}
 }
 
@@ -68,7 +69,7 @@ func (h *handler) GetVideoByIDHandler() video.GetVideoIDHandlerFunc {
 			return video.NewGetVideoIDBadRequest().WithPayload(&models.Error{Code: "500", Message: err.Error()})
 		}
 
-		return video.NewGetVideoIDOK().WithPayload(res)
+		return video.NewGetVideoIDOK().WithPayload(res).WithAccessControlAllowOrigin(os.Getenv("CLIENT_URL"))
 	}
 }
 
@@ -90,7 +91,7 @@ func (h *handler) UpdateViewHandler() video.PatchVideoViewIDHandlerFunc {
 				Message:    "Success",
 				TotalViews: int64(*res),
 			},
-		)
+		).WithAccessControlAllowOrigin(os.Getenv("CLIENT_URL"))
 	}
 }
 
@@ -109,7 +110,7 @@ func (h *handler) GetRandomVideosHandler() video.GetVideoRandomHandlerFunc {
 		return video.NewGetVideoRandomOK().WithPayload(&video.GetVideoRandomOKBody{
 			Message: "Success",
 			Videos:  arr,
-		})
+		}).WithAccessControlAllowOrigin(os.Getenv("CLIENT_URL"))
 	}
 }
 
@@ -128,7 +129,7 @@ func (h *handler) GetTrendingVideosHandler() video.GetVideoTrendHandlerFunc {
 		return video.NewGetVideoTrendOK().WithPayload(&video.GetVideoTrendOKBody{
 			Message: "Success",
 			Videos:  arr,
-		})
+		}).WithAccessControlAllowOrigin(os.Getenv("CLIENT_URL"))
 	}
 }
 
@@ -153,7 +154,7 @@ func (h *handler) GetVideosFromSubscribedChannelsHandler() video.GetVideoSubHand
 		return video.NewGetVideoSubOK().WithPayload(&video.GetVideoSubOKBody{
 			Message: "Success",
 			Videos:  arr,
-		})
+		}).WithAccessControlAllowOrigin(os.Getenv("CLIENT_URL"))
 	}
 }
 
@@ -173,7 +174,7 @@ func (h *handler) GetVideosByTagsHandler() video.GetVideoTagsHandlerFunc {
 		return video.NewGetVideoTagsOK().WithPayload(&video.GetVideoTagsOKBody{
 			Message: "Success",
 			Videos:  arr,
-		})
+		}).WithAccessControlAllowOrigin(os.Getenv("CLIENT_URL"))
 	}
 }
 
@@ -193,6 +194,6 @@ func (h *handler) SearchVideosHandler() video.GetVideoSearchHandlerFunc {
 		return video.NewGetVideoSearchOK().WithPayload(&video.GetVideoSearchOKBody{
 			Message: "Success",
 			Videos:  arr,
-		})
+		}).WithAccessControlAllowOrigin(os.Getenv("CLIENT_URL"))
 	}
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/youtube-api-golang/internal/apis/operations/health"
@@ -29,6 +30,6 @@ func (h *handler) GetHealthHandler() health.GetHealthHandlerFunc {
 		return health.NewGetHealthOK().WithPayload(&health.GetHealthOKBody{
 			Data:    &models.Health{Status: "OK"},
 			Message: "Success Get Health",
-		})
+		}).WithAccessControlAllowOrigin(os.Getenv("CLIENT_URL"))
 	}
 }

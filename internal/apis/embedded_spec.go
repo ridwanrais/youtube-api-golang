@@ -18,6 +18,9 @@ var (
 
 func init() {
 	SwaggerJSON = json.RawMessage([]byte(`{
+  "consumes": [
+    "application/json"
+  ],
   "schemes": [
     "http"
   ],
@@ -27,10 +30,6 @@ func init() {
     "title": "Youtube API",
     "contact": {
       "email": "ridwan.rais2@gmail.com"
-    },
-    "license": {
-      "name": "Apache 2.0",
-      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
     "version": "1.0.0"
   },
@@ -70,6 +69,11 @@ func init() {
                   "type": "string",
                   "example": "comment created successfully"
                 }
+              }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
               }
             }
           },
@@ -118,6 +122,11 @@ func init() {
                   "type": "string",
                   "example": "comment deleted successfully"
                 }
+              }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
               }
             }
           },
@@ -170,6 +179,11 @@ func init() {
                   "type": "string"
                 }
               }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
             }
           },
           "400": {
@@ -219,6 +233,11 @@ func init() {
                   "example": "disliking a video is successful"
                 }
               }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
             }
           },
           "400": {
@@ -258,6 +277,11 @@ func init() {
                   "type": "string",
                   "example": "app running well"
                 }
+              }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
               }
             }
           },
@@ -308,6 +332,11 @@ func init() {
                   "example": "liking a video is successful"
                 }
               }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
             }
           },
           "400": {
@@ -352,6 +381,11 @@ func init() {
                   "type": "string",
                   "example": "subscribing a user is successful"
                 }
+              }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
               }
             }
           },
@@ -398,6 +432,11 @@ func init() {
                   "example": "unsubscribing a user is successful"
                 }
               }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
             }
           },
           "400": {
@@ -438,6 +477,9 @@ func init() {
               "$ref": "#/definitions/LoginResponse"
             },
             "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              },
               "Set-Cookie": {
                 "type": "string"
               }
@@ -492,6 +534,11 @@ func init() {
                   "example": "1"
                 }
               }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
             }
           },
           "400": {
@@ -541,6 +588,11 @@ func init() {
                   "type": "object",
                   "$ref": "#/definitions/UserResponse"
                 }
+              }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
               }
             }
           },
@@ -597,6 +649,11 @@ func init() {
                   "$ref": "#/definitions/UserResponse"
                 }
               }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
             }
           },
           "400": {
@@ -643,6 +700,11 @@ func init() {
                   "type": "string",
                   "example": "1"
                 }
+              }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
               }
             }
           },
@@ -694,6 +756,11 @@ func init() {
                   "example": "1"
                 }
               }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
             }
           },
           "400": {
@@ -735,6 +802,11 @@ func init() {
                     "$ref": "#/definitions/Video"
                   }
                 }
+              }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
               }
             }
           },
@@ -787,6 +859,11 @@ func init() {
                   }
                 }
               }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
             }
           },
           "400": {
@@ -827,6 +904,11 @@ func init() {
                     "$ref": "#/definitions/Video"
                   }
                 }
+              }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
               }
             }
           },
@@ -879,6 +961,11 @@ func init() {
                   }
                 }
               }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
             }
           },
           "400": {
@@ -920,6 +1007,11 @@ func init() {
                     "$ref": "#/definitions/Video"
                   }
                 }
+              }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
               }
             }
           },
@@ -967,6 +1059,11 @@ func init() {
                 "totalViews": {
                   "type": "integer"
                 }
+              }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
               }
             }
           },
@@ -1017,6 +1114,11 @@ func init() {
                   "type": "object",
                   "$ref": "#/definitions/Video"
                 }
+              }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
               }
             }
           },
@@ -1073,6 +1175,11 @@ func init() {
                   "$ref": "#/definitions/Video"
                 }
               }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
             }
           },
           "400": {
@@ -1119,6 +1226,11 @@ func init() {
                   "type": "string",
                   "example": "1"
                 }
+              }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
               }
             }
           },
@@ -1356,17 +1468,6 @@ func init() {
     },
     "Video": {
       "type": "object",
-      "required": [
-        "userID",
-        "title",
-        "description",
-        "imgUrl",
-        "videoUrl",
-        "views",
-        "tags",
-        "likes",
-        "dislikes"
-      ],
       "properties": {
         "ID": {
           "type": "string"
@@ -1523,6 +1624,9 @@ func init() {
   ]
 }`))
 	FlatSwaggerJSON = json.RawMessage([]byte(`{
+  "consumes": [
+    "application/json"
+  ],
   "schemes": [
     "http"
   ],
@@ -1532,10 +1636,6 @@ func init() {
     "title": "Youtube API",
     "contact": {
       "email": "ridwan.rais2@gmail.com"
-    },
-    "license": {
-      "name": "Apache 2.0",
-      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
     "version": "1.0.0"
   },
@@ -1575,6 +1675,11 @@ func init() {
                   "type": "string",
                   "example": "comment created successfully"
                 }
+              }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
               }
             }
           },
@@ -1632,6 +1737,11 @@ func init() {
                   "type": "string",
                   "example": "comment deleted successfully"
                 }
+              }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
               }
             }
           },
@@ -1693,6 +1803,11 @@ func init() {
                   "type": "string"
                 }
               }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
             }
           },
           "400": {
@@ -1751,6 +1866,11 @@ func init() {
                   "example": "disliking a video is successful"
                 }
               }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
             }
           },
           "400": {
@@ -1799,6 +1919,11 @@ func init() {
                   "type": "string",
                   "example": "app running well"
                 }
+              }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
               }
             }
           },
@@ -1858,6 +1983,11 @@ func init() {
                   "example": "liking a video is successful"
                 }
               }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
             }
           },
           "400": {
@@ -1911,6 +2041,11 @@ func init() {
                   "type": "string",
                   "example": "subscribing a user is successful"
                 }
+              }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
               }
             }
           },
@@ -1966,6 +2101,11 @@ func init() {
                   "example": "unsubscribing a user is successful"
                 }
               }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
             }
           },
           "400": {
@@ -2015,6 +2155,9 @@ func init() {
               "$ref": "#/definitions/LoginResponse"
             },
             "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              },
               "Set-Cookie": {
                 "type": "string"
               }
@@ -2078,6 +2221,11 @@ func init() {
                   "example": "1"
                 }
               }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
             }
           },
           "400": {
@@ -2136,6 +2284,11 @@ func init() {
                   "type": "object",
                   "$ref": "#/definitions/UserResponse"
                 }
+              }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
               }
             }
           },
@@ -2201,6 +2354,11 @@ func init() {
                   "$ref": "#/definitions/UserResponse"
                 }
               }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
             }
           },
           "400": {
@@ -2256,6 +2414,11 @@ func init() {
                   "type": "string",
                   "example": "1"
                 }
+              }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
               }
             }
           },
@@ -2316,6 +2479,11 @@ func init() {
                   "example": "1"
                 }
               }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
             }
           },
           "400": {
@@ -2366,6 +2534,11 @@ func init() {
                     "$ref": "#/definitions/Video"
                   }
                 }
+              }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
               }
             }
           },
@@ -2427,6 +2600,11 @@ func init() {
                   }
                 }
               }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
             }
           },
           "400": {
@@ -2476,6 +2654,11 @@ func init() {
                     "$ref": "#/definitions/Video"
                   }
                 }
+              }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
               }
             }
           },
@@ -2537,6 +2720,11 @@ func init() {
                   }
                 }
               }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
             }
           },
           "400": {
@@ -2587,6 +2775,11 @@ func init() {
                     "$ref": "#/definitions/Video"
                   }
                 }
+              }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
               }
             }
           },
@@ -2643,6 +2836,11 @@ func init() {
                 "totalViews": {
                   "type": "integer"
                 }
+              }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
               }
             }
           },
@@ -2702,6 +2900,11 @@ func init() {
                   "type": "object",
                   "$ref": "#/definitions/Video"
                 }
+              }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
               }
             }
           },
@@ -2767,6 +2970,11 @@ func init() {
                   "$ref": "#/definitions/Video"
                 }
               }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
+              }
             }
           },
           "400": {
@@ -2822,6 +3030,11 @@ func init() {
                   "type": "string",
                   "example": "1"
                 }
+              }
+            },
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "type": "string"
               }
             }
           },
@@ -3068,17 +3281,6 @@ func init() {
     },
     "Video": {
       "type": "object",
-      "required": [
-        "userID",
-        "title",
-        "description",
-        "imgUrl",
-        "videoUrl",
-        "views",
-        "tags",
-        "likes",
-        "dislikes"
-      ],
       "properties": {
         "ID": {
           "type": "string"

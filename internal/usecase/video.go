@@ -43,7 +43,7 @@ func (u *useCase) UpdateVideo(ctx context.Context, params video.PutVideoIDParams
 		return nil, err
 	}
 
-	if *res.UserID != tokenUserID {
+	if res.UserID != tokenUserID {
 		return nil, errors.New("Anda tidak berhak melakukan perintah ini")
 	}
 
@@ -75,7 +75,7 @@ func (u *useCase) DeleteVideo(ctx context.Context, params video.DeleteVideoIDPar
 		return nil, err
 	}
 
-	if *res.UserID != tokenUserID {
+	if res.UserID != tokenUserID {
 		return nil, errors.New("Anda tidak berhak melakukan perintah ini")
 	}
 

@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"log"
+	"os"
 
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/youtube-api-golang/internal/apis/operations/user"
@@ -21,7 +22,7 @@ func (h *handler) RegisterUserHandler() user.PostUserRegisterHandlerFunc {
 		return user.NewPostUserRegisterOK().WithPayload(&user.PostUserRegisterOKBody{
 			Message: result.Message,
 			UserID:  result.UserID,
-		})
+		}).WithAccessControlAllowOrigin(os.Getenv("CLIENT_URL"))
 	}
 }
 
@@ -38,7 +39,7 @@ func (h *handler) UpdateUserHandler() user.PutUserIDHandlerFunc {
 			return user.NewPutUserIDBadRequest().WithPayload(&models.Error{Code: "500", Message: err.Error()})
 		}
 
-		return user.NewPutUserIDOK().WithPayload(res)
+		return user.NewPutUserIDOK().WithPayload(res).WithAccessControlAllowOrigin(os.Getenv("CLIENT_URL"))
 	}
 }
 
@@ -55,7 +56,7 @@ func (h *handler) DeleteUserHandler() user.DeleteUserIDHandlerFunc {
 			return user.NewPutUserIDBadRequest().WithPayload(&models.Error{Code: "500", Message: err.Error()})
 		}
 
-		return user.NewDeleteUserIDOK().WithPayload(res)
+		return user.NewDeleteUserIDOK().WithPayload(res).WithAccessControlAllowOrigin(os.Getenv("CLIENT_URL"))
 	}
 }
 
@@ -66,6 +67,6 @@ func (h *handler) GetUserByIDHandler() user.GetUserIDHandlerFunc {
 			return user.NewGetUserIDBadRequest().WithPayload(&models.Error{Code: "500", Message: err.Error()})
 		}
 
-		return user.NewGetUserIDOK().WithPayload(res)
+		return user.NewGetUserIDOK().WithPayload(res).WithAccessControlAllowOrigin(os.Getenv("CLIENT_URL"))
 	}
 }
