@@ -8,9 +8,13 @@ import (
 
 type Comment struct {
 	ID          primitive.ObjectID `bson:"_id,omitempty"`
-	UserID      primitive.ObjectID `bson:"userID,omitempty"`
-	VideoID     primitive.ObjectID `bson:"videoID,omitempty"`
-	Description string             `bson:"description,omitempty"`
-	CreatedAt   time.Time          `bson:"createdAt,omitempty"`
-	UpdatedAt   time.Time          `bson:"updatedAt,omitempty"`
+	UserID      primitive.ObjectID `bson:"userID"`
+	VideoID     primitive.ObjectID `bson:"videoID"`
+	Description string             `bson:"description"`
+	CreatedAt   time.Time          `bson:"createdAt"`
+	UpdatedAt   time.Time          `bson:"updatedAt"`
+}
+
+func NewComment(comment Comment) Comment {
+	return comment
 }

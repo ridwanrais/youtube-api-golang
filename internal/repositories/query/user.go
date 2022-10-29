@@ -8,14 +8,20 @@ import (
 
 type User struct {
 	ID              primitive.ObjectID   `bson:"_id,omitempty"`
-	Username        string               `bson:"username,omitempty"`
-	Email           string               `bson:"email,omitempty"`
-	Password        string               `bson:"password,omitempty"`
-	Img             string               `bson:"img,omitempty,omitempty"`
-	Subscribers     int                  `bson:"subscribers,omitempty"`
-	SubscribedUsers []primitive.ObjectID `bson:"subscribedUsers,omitempty"`
-	CreatedAt       time.Time            `bson:"createdAt,omitempty"`
-	UpdatedAt       time.Time            `bson:"updatedAt,omitempty"`
+	Username        string               `bson:"username"`
+	Email           string               `bson:"email"`
+	Password        string               `bson:"password"`
+	Img             string               `bson:"img"`
+	Subscribers     int                  `bson:"subscribers"`
+	SubscribedUsers []primitive.ObjectID `bson:"subscribedUsers"`
+	CreatedAt       time.Time            `bson:"createdAt"`
+	UpdatedAt       time.Time            `bson:"updatedAt"`
+}
+
+func NewUser(user User) User {
+	user.SubscribedUsers = []primitive.ObjectID{}
+
+	return user
 }
 
 type UpdateSub struct {
