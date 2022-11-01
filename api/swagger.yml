@@ -93,7 +93,7 @@ paths:
           $ref: "#/responses/BadRequest"
         "404":
           $ref: "#/responses/NotFound"
-  /user/login:
+  /auth/login:
     post:
       summary: Login
       description: Login

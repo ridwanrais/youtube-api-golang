@@ -5,6 +5,7 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"errors"
+	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -18,7 +19,9 @@ import (
 	"github.com/youtube-api-golang/internal/shared"
 )
 
-func (u *useCase) Login(ctx context.Context, params auth.PostUserLoginParams) (*models.LoginResponse, error) {
+func (u *useCase) Login(ctx context.Context, params auth.PostAuthLoginParams) (*models.LoginResponse, error) {
+	fmt.Println(params)
+
 	user := u.repo.GetUserByUsername(ctx, *params.Body.Username)
 	if user == nil {
 		return nil, errors.New("akun tidak terdaftar")

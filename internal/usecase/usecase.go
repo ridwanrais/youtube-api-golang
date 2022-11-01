@@ -21,7 +21,7 @@ type UseCase interface {
 	GetHealthcheck(ctx context.Context) (*models.Health, error)
 
 	// auth
-	Login(ctx context.Context, params auth.PostUserLoginParams) (*models.LoginResponse, error)
+	Login(ctx context.Context, params auth.PostAuthLoginParams) (*models.LoginResponse, error)
 
 	// user
 	RegisterUser(ctx context.Context, params user.PostUserRegisterParams) (*user.PostUserRegisterOKBody, error)

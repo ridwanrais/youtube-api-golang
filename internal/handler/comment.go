@@ -21,7 +21,7 @@ func (h *handler) AddCommentHandler() comment.PostCommentHandlerFunc {
 		commentID, err := h.useCase.AddComment(context.Background(), params, tokenClaim.UserID)
 
 		if err != nil {
-			return comment.NewPostCommentBadRequest().WithPayload(&models.Error{Code: "500", Message: err.Error()})
+			return comment.NewPostCommentBadRequest().WithPayload(&models.Error{Code: "400", Message: err.Error()})
 		}
 
 		return comment.NewPostCommentOK().WithPayload(
@@ -43,7 +43,7 @@ func (h *handler) DeleteCommentHandler() comment.DeleteCommentHandlerFunc {
 		deletedCommentID, err := h.useCase.DeleteComment(context.Background(), params, tokenClaim.UserID)
 
 		if err != nil {
-			return comment.NewDeleteCommentBadRequest().WithPayload(&models.Error{Code: "500", Message: err.Error()})
+			return comment.NewDeleteCommentBadRequest().WithPayload(&models.Error{Code: "400", Message: err.Error()})
 		}
 
 		return comment.NewDeleteCommentOK().WithPayload(
@@ -60,7 +60,7 @@ func (h *handler) GetCommentsByVideoIDHandler() comment.GetCommentsVideoIDHandle
 		comments, err := h.useCase.GetCommentsByVideoID(context.Background(), params.VideoID)
 
 		if err != nil {
-			return comment.NewGetCommentsVideoIDBadRequest().WithPayload(&models.Error{Code: "500", Message: err.Error()})
+			return comment.NewGetCommentsVideoIDBadRequest().WithPayload(&models.Error{Code: "400", Message: err.Error()})
 		}
 
 		var arr []*models.Comment

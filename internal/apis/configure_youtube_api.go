@@ -53,7 +53,7 @@ func configureAPI(api *operations.YoutubeAPIAPI) http.Handler {
 	api.UserGetUserIDHandler = mountHandler.GetUserByIDHandler()
 
 	// auth
-	api.AuthPostUserLoginHandler = mountHandler.LoginHandler()
+	api.AuthPostAuthLoginHandler = mountHandler.LoginHandler()
 
 	// subscription
 	api.SubscriptionPatchSubUserIDHandler = mountHandler.SubscribeHandler()

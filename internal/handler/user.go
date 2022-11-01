@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 
@@ -16,7 +17,7 @@ func (h *handler) RegisterUserHandler() user.PostUserRegisterHandlerFunc {
 		result, err := h.useCase.RegisterUser(context.Background(), params)
 
 		if err != nil {
-			return user.NewPostUserRegisterBadRequest().WithPayload(&models.Error{Code: "500", Message: err.Error()})
+			return user.NewPostUserRegisterBadRequest().WithPayload(&models.Error{Code: "400", Message: err.Error()})
 		}
 
 		return user.NewPostUserRegisterOK().WithPayload(&user.PostUserRegisterOKBody{
@@ -36,7 +37,7 @@ func (h *handler) UpdateUserHandler() user.PutUserIDHandlerFunc {
 		res, err := h.useCase.UpdateUser(context.Background(), params, tokenClaim.UserID)
 
 		if err != nil {
-			return user.NewPutUserIDBadRequest().WithPayload(&models.Error{Code: "500", Message: err.Error()})
+			return user.NewPutUserIDBadRequest().WithPayload(&models.Error{Code: "400", Message: err.Error()})
 		}
 
 		return user.NewPutUserIDOK().WithPayload(res).WithAccessControlAllowOrigin(os.Getenv("CLIENT_URL"))
@@ -53,7 +54,7 @@ func (h *handler) DeleteUserHandler() user.DeleteUserIDHandlerFunc {
 		res, err := h.useCase.DeleteUser(context.Background(), params, tokenClaim.UserID)
 
 		if err != nil {
-			return user.NewPutUserIDBadRequest().WithPayload(&models.Error{Code: "500", Message: err.Error()})
+			return user.NewPutUserIDBadRequest().WithPayload(&models.Error{Code: "400", Message: err.Error()})
 		}
 
 		return user.NewDeleteUserIDOK().WithPayload(res).WithAccessControlAllowOrigin(os.Getenv("CLIENT_URL"))
@@ -62,9 +63,11 @@ func (h *handler) DeleteUserHandler() user.DeleteUserIDHandlerFunc {
 
 func (h *handler) GetUserByIDHandler() user.GetUserIDHandlerFunc {
 	return func(params user.GetUserIDParams) middleware.Responder {
+		fmt.Println(params.ID)
+
 		res, err := h.useCase.GetUserByID(context.Background(), params)
 		if err != nil {
-			return user.NewGetUserIDBadRequest().WithPayload(&models.Error{Code: "500", Message: err.Error()})
+			return user.NewGetUserIDBadRequest().WithPayload(&models.Error{Code: "400", Message: err.Error()})
 		}
 
 		return user.NewGetUserIDOK().WithPayload(res).WithAccessControlAllowOrigin(os.Getenv("CLIENT_URL"))

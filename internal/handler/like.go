@@ -21,7 +21,7 @@ func (h *handler) UpdateVideoLikeHandler() like.PatchLikeVideoIDHandlerFunc {
 		result, err := h.useCase.UpdateVideoLike(context.Background(), params, tokenClaim.UserID)
 
 		if err != nil {
-			return like.NewPatchLikeVideoIDBadRequest().WithPayload(&models.Error{Code: "500", Message: err.Error()})
+			return like.NewPatchLikeVideoIDBadRequest().WithPayload(&models.Error{Code: "400", Message: err.Error()})
 		}
 
 		return like.NewPatchLikeVideoIDOK().WithPayload(&like.PatchLikeVideoIDOKBody{
@@ -41,7 +41,7 @@ func (h *handler) UpdateVideoDislikeHandler() like.PatchDislikeVideoIDHandlerFun
 		result, err := h.useCase.UpdateVideoDislike(context.Background(), params, tokenClaim.UserID)
 
 		if err != nil {
-			return like.NewPatchDislikeVideoIDBadRequest().WithPayload(&models.Error{Code: "500", Message: err.Error()})
+			return like.NewPatchDislikeVideoIDBadRequest().WithPayload(&models.Error{Code: "400", Message: err.Error()})
 		}
 
 		return like.NewPatchDislikeVideoIDOK().WithPayload(&like.PatchDislikeVideoIDOKBody{

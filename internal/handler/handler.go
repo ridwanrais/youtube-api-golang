@@ -27,7 +27,7 @@ type Handlers interface {
 	GetUserByIDHandler() user.GetUserIDHandlerFunc
 
 	// auth
-	LoginHandler() auth.PostUserLoginHandlerFunc
+	LoginHandler() auth.PostAuthLoginHandlerFunc
 
 	// subscription
 	SubscribeHandler() subscription.PatchSubUserIDHandlerFunc

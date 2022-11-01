@@ -24,7 +24,7 @@ func (h *handler) GetHealthHandler() health.GetHealthHandlerFunc {
 
 		_, err = h.useCase.GetHealthcheck(context.Background())
 		if err != nil {
-			return health.NewGetHealthBadRequest().WithPayload(&models.Error{Code: "500", Message: err.Error()})
+			return health.NewGetHealthBadRequest().WithPayload(&models.Error{Code: "400", Message: err.Error()})
 		}
 
 		return health.NewGetHealthOK().WithPayload(&health.GetHealthOKBody{

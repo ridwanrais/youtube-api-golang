@@ -101,11 +101,11 @@ func NewYoutubeAPIAPI(spec *loads.Document) *YoutubeAPIAPI {
 		VideoPatchVideoViewIDHandler: video.PatchVideoViewIDHandlerFunc(func(params video.PatchVideoViewIDParams, principal interface{}) middleware.Responder {
 			return middleware.NotImplemented("operation video.PatchVideoViewID has not yet been implemented")
 		}),
+		AuthPostAuthLoginHandler: auth.PostAuthLoginHandlerFunc(func(params auth.PostAuthLoginParams) middleware.Responder {
+			return middleware.NotImplemented("operation auth.PostAuthLogin has not yet been implemented")
+		}),
 		CommentPostCommentHandler: comment.PostCommentHandlerFunc(func(params comment.PostCommentParams, principal interface{}) middleware.Responder {
 			return middleware.NotImplemented("operation comment.PostComment has not yet been implemented")
-		}),
-		AuthPostUserLoginHandler: auth.PostUserLoginHandlerFunc(func(params auth.PostUserLoginParams) middleware.Responder {
-			return middleware.NotImplemented("operation auth.PostUserLogin has not yet been implemented")
 		}),
 		UserPostUserRegisterHandler: user.PostUserRegisterHandlerFunc(func(params user.PostUserRegisterParams) middleware.Responder {
 			return middleware.NotImplemented("operation user.PostUserRegister has not yet been implemented")
@@ -203,10 +203,10 @@ type YoutubeAPIAPI struct {
 	SubscriptionPatchUnsubUserIDHandler subscription.PatchUnsubUserIDHandler
 	// VideoPatchVideoViewIDHandler sets the operation handler for the patch video view ID operation
 	VideoPatchVideoViewIDHandler video.PatchVideoViewIDHandler
+	// AuthPostAuthLoginHandler sets the operation handler for the post auth login operation
+	AuthPostAuthLoginHandler auth.PostAuthLoginHandler
 	// CommentPostCommentHandler sets the operation handler for the post comment operation
 	CommentPostCommentHandler comment.PostCommentHandler
-	// AuthPostUserLoginHandler sets the operation handler for the post user login operation
-	AuthPostUserLoginHandler auth.PostUserLoginHandler
 	// UserPostUserRegisterHandler sets the operation handler for the post user register operation
 	UserPostUserRegisterHandler user.PostUserRegisterHandler
 	// VideoPostVideoHandler sets the operation handler for the post video operation
@@ -347,11 +347,11 @@ func (o *YoutubeAPIAPI) Validate() error {
 	if o.VideoPatchVideoViewIDHandler == nil {
 		unregistered = append(unregistered, "video.PatchVideoViewIDHandler")
 	}
+	if o.AuthPostAuthLoginHandler == nil {
+		unregistered = append(unregistered, "auth.PostAuthLoginHandler")
+	}
 	if o.CommentPostCommentHandler == nil {
 		unregistered = append(unregistered, "comment.PostCommentHandler")
-	}
-	if o.AuthPostUserLoginHandler == nil {
-		unregistered = append(unregistered, "auth.PostUserLoginHandler")
 	}
 	if o.UserPostUserRegisterHandler == nil {
 		unregistered = append(unregistered, "user.PostUserRegisterHandler")
@@ -533,11 +533,11 @@ func (o *YoutubeAPIAPI) initHandlerCache() {
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
-	o.handlers["POST"]["/comment"] = comment.NewPostComment(o.context, o.CommentPostCommentHandler)
+	o.handlers["POST"]["/auth/login"] = auth.NewPostAuthLogin(o.context, o.AuthPostAuthLoginHandler)
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
-	o.handlers["POST"]["/user/login"] = auth.NewPostUserLogin(o.context, o.AuthPostUserLoginHandler)
+	o.handlers["POST"]["/comment"] = comment.NewPostComment(o.context, o.CommentPostCommentHandler)
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}

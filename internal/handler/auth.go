@@ -10,14 +10,14 @@ import (
 	"github.com/youtube-api-golang/internal/models"
 )
 
-func (h *handler) LoginHandler() auth.PostUserLoginHandlerFunc {
-	return func(params auth.PostUserLoginParams) middleware.Responder {
+func (h *handler) LoginHandler() auth.PostAuthLoginHandlerFunc {
+	return func(params auth.PostAuthLoginParams) middleware.Responder {
 		res, err := h.useCase.Login(context.Background(), params)
 
 		if err != nil {
-			return auth.NewPostUserLoginBadRequest().WithPayload(&models.Error{Code: "500", Message: err.Error()})
+			return auth.NewPostAuthLoginBadRequest().WithPayload(&models.Error{Code: "400", Message: err.Error()})
 		}
 
-		return auth.NewPostUserLoginOK().WithPayload(res).WithSetCookie(fmt.Sprintf("access_token=%s; Path=/; Expires=%s; HttpOnly", res.Value, res.ExpiredAt)).WithAccessControlAllowOrigin(os.Getenv("CLIENT_URL"))
+		return auth.NewPostAuthLoginOK().WithPayload(res).WithSetCookie(fmt.Sprintf("access_token=%s; Path=/; Expires=%s; HttpOnly", res.Value, res.ExpiredAt)).WithAccessControlAllowOrigin(os.Getenv("CLIENT_URL"))
 	}
 }

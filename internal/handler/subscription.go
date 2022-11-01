@@ -21,7 +21,7 @@ func (h *handler) SubscribeHandler() subscription.PatchSubUserIDHandlerFunc {
 		err = h.useCase.Subscribe(context.Background(), params, tokenClaim.UserID)
 
 		if err != nil {
-			return subscription.NewPatchSubUserIDBadRequest().WithPayload(&models.Error{Code: "500", Message: err.Error()})
+			return subscription.NewPatchSubUserIDBadRequest().WithPayload(&models.Error{Code: "400", Message: err.Error()})
 		}
 
 		return subscription.NewPatchSubUserIDOK().WithPayload(
@@ -40,7 +40,7 @@ func (h *handler) UnsubscribeHandler() subscription.PatchUnsubUserIDHandlerFunc 
 		err = h.useCase.Unsubscribe(context.Background(), params, tokenClaim.UserID)
 
 		if err != nil {
-			return subscription.NewPatchUnsubUserIDBadRequest().WithPayload(&models.Error{Code: "500", Message: err.Error()})
+			return subscription.NewPatchUnsubUserIDBadRequest().WithPayload(&models.Error{Code: "400", Message: err.Error()})
 		}
 
 		return subscription.NewPatchUnsubUserIDOK().WithPayload(
